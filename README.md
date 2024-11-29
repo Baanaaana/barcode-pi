@@ -4,6 +4,7 @@
 
 A Python-based application for printing barcode labels using a Zebra ZD220 printer on Raspberry Pi. The application fetches product data from an XML feed and allows for easy barcode label printing.
 
+
 ## Features
 
 - Compatible with Zebra ZD220 label printer
@@ -99,6 +100,7 @@ A test barcode will be printed automatically during setup to confirm everything 
 
 Note: The printer is configured to use the raw printer driver, which allows direct ZPL commands to be sent to the printer. This is the recommended setup for Zebra label printers on Linux systems.
 
+
 ### Troubleshooting Printer Setup
 
 If you encounter issues with the printer:
@@ -133,6 +135,7 @@ rm -rf ~/barcode_env && \
 rm -f ~/Desktop/BarcodeApp.desktop && \
 rm -f ~/.config/autostart/barcode_printer.desktop
 ```
+
 
 ## Troubleshooting
 

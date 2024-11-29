@@ -26,9 +26,10 @@ A Python-based application for printing barcode labels using a Zebra ZD220 print
 ## Quick Installation
 
 Install the application with a single command:
-    ```
-    curl -sSL https://raw.githubusercontent.com/Baanaaana/barcode-pi/main/install_barcode_app.sh | bash
-    ```
+```bash
+curl -sSL https://raw.githubusercontent.com/Baanaaana/barcode-pi/main/install_barcode_app.sh | bash
+```
+
 This will:
 - Install all required dependencies
 - Set up the printer configuration
@@ -42,17 +43,19 @@ This will:
 If you prefer to review the installation script first:
 
 1. Download the installation script:
-    ```
-    wget https://raw.githubusercontent.com/Baanaaana/barcode-pi/main/install_barcode_app.sh
-    ```
+```bash
+wget https://raw.githubusercontent.com/Baanaaana/barcode-pi/main/install_barcode_app.sh
+```
+
 2. Make it executable:
-    ```
-    chmod +x install_barcode_app.sh
-    ```
+```bash
+chmod +x install_barcode_app.sh
+```
+
 3. Run the script:
-    ```
-    ./install_barcode_app.sh
-    ```
+```bash
+./install_barcode_app.sh
+```
 
 
 ## Post-Installation
@@ -76,10 +79,9 @@ The application can be configured through the GUI:
 ## XML Feed URL
 
 To set the XML feed URL via SSH:
-
-    ```
-    python3 /home/pi/barcode-pi/set_url.py "XML_FEED_URL"
-    ```
+```bash
+python3 /home/pi/barcode-pi/set_url.py "XML_FEED_URL"
+```
 
 
 ## Printer Setup
@@ -89,9 +91,9 @@ The system includes support for the Zebra ZD220 label printer. To set up the pri
 1. Connect the Zebra ZD220 printer to your Raspberry Pi via USB
 
 2. Run the printer setup commands:
-   ```
-   cd ~/barcode-pi && sudo ./setup_zebra_printer.sh && python3 verify_printer.py
-   ```
+```bash
+cd ~/barcode-pi && sudo ./setup_zebra_printer.sh && python3 verify_printer.py
+```
 
 A test barcode will be printed automatically during setup to confirm everything is working correctly.
 
@@ -103,38 +105,40 @@ If you encounter issues with the printer:
 
 1. Ensure the printer is properly connected via USB and powered on
 2. Check the USB connection:
-   ```bash
-   lsusb | grep Zebra
-   ```
+```bash
+lsusb | grep Zebra
+```
+
 3. Verify CUPS is running:
-   ```bash
-   systemctl status cups
-   ```
+```bash
+systemctl status cups
+```
+
 4. Check printer status:
-   ```bash
-   lpstat -p ZebraZD220
-   ```
+```bash
+lpstat -p ZebraZD220
+```
 
 
 ## Uninstallation
 
 To uninstall the application:
-    ```
-    sudo systemctl stop barcode-printer.service && \
-    sudo systemctl disable barcode-printer.service && \
-    sudo rm -f /etc/systemd/system/barcode-printer.service && \
-    sudo systemctl daemon-reload && \
-    rm -rf ~/barcode-pi && \
-    rm -rf ~/barcode_env && \
-    rm -f ~/Desktop/BarcodeApp.desktop && \
-    rm -f ~/.config/autostart/barcode_printer.desktop
-    ```
+```bash
+sudo systemctl stop barcode-printer.service && \
+sudo systemctl disable barcode-printer.service && \
+sudo rm -f /etc/systemd/system/barcode-printer.service && \
+sudo systemctl daemon-reload && \
+rm -rf ~/barcode-pi && \
+rm -rf ~/barcode_env && \
+rm -f ~/Desktop/BarcodeApp.desktop && \
+rm -f ~/.config/autostart/barcode_printer.desktop
+```
 
 ## Troubleshooting
 
 If you encounter any issues:
 1. Ensure your Zebra printer is properly connected and powered on
-2. Check that CUPS service is running ("sudo systemctl status cups")
+2. Check that CUPS service is running (`sudo systemctl status cups`)
 3. Verify your internet connection for XML feed access
 4. Check application logs for errors
 

@@ -64,6 +64,19 @@ The application can be configured through the GUI:
 - Auto-print toggle
 - Number of copies
 
+## Uninstallation
+
+To uninstall the application:
+```
+sudo systemctl stop barcode-printer.service && \
+sudo systemctl disable barcode-printer.service && \
+sudo rm -f /etc/systemd/system/barcode-printer.service && \
+sudo systemctl daemon-reload && \
+rm -rf ~/Desktop/AppV2 && \
+rm -rf ~/barcode_env && \
+rm -f ~/Desktop/BarcodeApp.desktop && \
+rm -f ~/.config/autostart/barcode_printer.desktop
+```
 ## Troubleshooting
 
 If you encounter any issues:

@@ -20,23 +20,28 @@ sudo apt-get install -y \
     libcups2-dev \
     git \
     wget \
-    fonts-freefont-ttf
+    fonts-freefont-ttf \
+    python3-requests \
+    python3-pil \
+    python3-cups \
+    python3-barcode \
+    python3-appdirs \
+    python3-xmltodict \
+    python3-venv
+
+# Create virtual environment for any remaining Python packages
+echo "Setting up Python virtual environment..."
+python3 -m venv ~/barcode_env
+source ~/barcode_env/bin/activate
+
+# Install any remaining Python packages that aren't available via apt
+pip install python-barcode
 
 # Install CUPS driver for Zebra GK420D
 echo "Setting up CUPS for Zebra printer..."
 sudo usermod -a -G lpadmin $USER
 sudo systemctl start cups
 sudo systemctl enable cups
-
-# Install Python dependencies
-echo "Installing Python packages..."
-pip3 install \
-    requests \
-    python-barcode \
-    pycups \
-    pillow \
-    appdirs \
-    xmltodict
 
 # Create application directory
 echo "Creating application directory..."
@@ -48,6 +53,11 @@ echo "Downloading application files..."
 git clone https://github.com/Baanaaana/barcode-pi.git .
 mv AppV2/* .
 rm -rf AppV2
+
+# Update run scripts to use virtual environment
+echo "Updating run scripts..."
+sed -i '1i source ~/barcode_env/bin/activate' ~/Desktop/AppV2/run.sh
+sed -i '1i source ~/barcode_env/bin/activate' ~/Desktop/AppV2/run-sleep.sh
 
 # Set up autostart directory
 echo "Setting up autostart..."
@@ -91,7 +101,7 @@ Type=simple
 User=pi
 Environment=DISPLAY=:0
 Environment=XAUTHORITY=/home/pi/.Xauthority
-ExecStart=/bin/bash /home/pi/Desktop/AppV2/run-sleep.sh
+ExecStart=/bin/bash -c 'source ~/barcode_env/bin/activate && /home/pi/Desktop/AppV2/run-sleep.sh'
 Restart=always
 RestartSec=3
 
@@ -111,25 +121,6 @@ chmod +x ~/Desktop/BarcodeApp.desktop
 chmod +x ~/Desktop/AppV2/run.sh
 chmod +x ~/Desktop/AppV2/run-sleep.sh
 chmod +x ~/Desktop/AppV2/YesBarcode.py
-
-# Create default config if not exists
-if [ ! -f "config.ini" ]; then
-    echo "Creating default configuration file..."
-    cat > config.ini << EOL
-[Printer]
-name=Zebra_GK420D
-model=GK420d
-
-[Data]
-feed_url=https://files.channable.com/L0d8YIWnXaO3p_VXpJyIdw==.xml
-refresh_interval=300
-
-[Labels]
-width=4
-height=6
-dpi=203
-EOL
-fi
 
 echo "Installation completed!"
 echo "Please ensure your Zebra GK420D printer is connected and powered on."

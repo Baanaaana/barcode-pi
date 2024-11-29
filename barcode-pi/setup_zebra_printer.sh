@@ -57,13 +57,31 @@ sleep 5
 # Remove existing printer if it exists
 lpadmin -x ZebraZD220 2>/dev/null || true
 
+# Detect USB printer
+echo "Detecting Zebra printer..."
+PRINTER_URI=""
+while IFS= read -r line; do
+    if [[ $line == *"Zebra"* ]]; then
+        PRINTER_URI=$(echo "$line" | awk '{print $2}')
+        break
+    fi
+done < <(lpinfo -v)
+
+if [ -z "$PRINTER_URI" ]; then
+    echo "Error: No Zebra printer detected via USB"
+    echo "Available devices:"
+    lpinfo -v
+    exit 1
+fi
+
+echo "Found printer at: $PRINTER_URI"
+
 # Add Zebra ZD220 printer with specific settings
 echo "Adding Zebra ZD220 printer..."
 lpadmin -p ZebraZD220 \
     -E \
-    -v "usb://Zebra/ZD220?serial=*" \
-    -m drv:///sample.drv/zebra.ppd \
-    -o PageSize=Custom.4x6in \
+    -v "$PRINTER_URI" \
+    -m raw \
     -o printer-is-shared=true \
     -o printer-error-policy=abort-job
 
@@ -73,9 +91,7 @@ lpoptions -d ZebraZD220
 # Configure specific settings for ZD220
 lpoptions -p ZebraZD220 \
     -o Resolution=203dpi \
-    -o PrintDensity=Normal \
-    -o PrintSpeed=4inch/sec \
-    -o MediaType=Labels
+    -o media=w4h6.0
 
 # Create test label with specific ZD220 settings
 cat > /tmp/test_label.zpl << EOF
@@ -128,4 +144,6 @@ echo -e "\nPrinter Details:"
 lpstat -v ZebraZD220
 lpstat -p ZebraZD220
 echo -e "\nUSB Connection:"
-lsusb | grep Zebra 
+lsusb | grep Zebra
+echo -e "\nAvailable USB devices:"
+lpinfo -v | grep -i usb

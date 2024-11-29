@@ -21,21 +21,22 @@ sudo apt-get install -y \
     git \
     wget \
     fonts-freefont-ttf \
-    python3-requests \
-    python3-pil \
-    python3-cups \
-    python3-barcode \
-    python3-appdirs \
-    python3-xmltodict \
     python3-venv
 
-# Create virtual environment for any remaining Python packages
-echo "Setting up Python virtual environment..."
+# Create virtual environment
+echo "Creating Python virtual environment..."
 python3 -m venv ~/barcode_env
-source ~/barcode_env/bin/activate
 
-# Install any remaining Python packages that aren't available via apt
-pip install python-barcode
+# Activate virtual environment and install Python packages
+echo "Installing Python packages in virtual environment..."
+source ~/barcode_env/bin/activate
+pip install \
+    requests \
+    python-barcode \
+    pycups \
+    pillow \
+    appdirs \
+    xmltodict
 
 # Install CUPS driver for Zebra GK420D
 echo "Setting up CUPS for Zebra printer..."
@@ -56,8 +57,18 @@ rm -rf AppV2
 
 # Update run scripts to use virtual environment
 echo "Updating run scripts..."
-sed -i '1i source ~/barcode_env/bin/activate' ~/Desktop/AppV2/run.sh
-sed -i '1i source ~/barcode_env/bin/activate' ~/Desktop/AppV2/run-sleep.sh
+cat > ~/Desktop/AppV2/run.sh << EOL
+#!/bin/bash
+source ~/barcode_env/bin/activate
+python3 /home/pi/Desktop/AppV2/YesBarcode.py
+EOL
+
+cat > ~/Desktop/AppV2/run-sleep.sh << EOL
+#!/bin/bash
+sleep 10
+source ~/barcode_env/bin/activate
+python3 /home/pi/Desktop/AppV2/YesBarcode.py
+EOL
 
 # Set up autostart directory
 echo "Setting up autostart..."

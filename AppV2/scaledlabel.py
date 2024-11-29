@@ -2,7 +2,7 @@ from PyQt5 import QtWidgets,QtGui,QtCore
 class scaledlabel(QtWidgets.QLabel):
     def __init__(self, *args, **kwargs):
         QtWidgets.QLabel.__init__(self)
-        self.setPixmap(QtGui.QPixmap("/home/pi/Desktop/AppV2/label.png"))
+        self.setPixmap(QtGui.QPixmap("/home/pi/barcode-pi/label.png"))
 #        self.setScaledContents(True)
 
         self._pixmap = QtGui.QPixmap(self.pixmap())

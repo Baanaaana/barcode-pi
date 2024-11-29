@@ -191,11 +191,11 @@ class MainWindow_exec(QtWidgets.QMainWindow, Ui_MainWindow):
         self.btn_print.setFocusPolicy(QtCore.Qt.NoFocus)
         self.label_barcode.setFocusPolicy(QtCore.Qt.NoFocus)
  
-        self.label_barcode.setPixmap(QtGui.QPixmap("/home/pi/Desktop/AppV2/label.png"))
+        self.label_barcode.setPixmap(QtGui.QPixmap("/home/pi/barcode-pi/label.png"))
 
 #        self.btn_refresh.setPixmap(QtGui.QPixmap("/home/pi/Desktop/AppV2/refresh.png"))
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("/home/pi/Desktop/AppV2/refresh.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap("/home/pi/barcode-pi/refresh.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_refresh.setIcon(icon)
 
         self.xml_timer = QtCore.QTimer(self)
@@ -493,7 +493,7 @@ class MainWindow_exec(QtWidgets.QMainWindow, Ui_MainWindow):
                 print('Printing disabled')
             if manual_print or self.check_autoprint.isChecked():
                 self.read_product.clear()
-                self.label_barcode.setPixmap(QtGui.QPixmap("/home/pi/Desktop/AppV2/label.png"))
+                self.label_barcode.setPixmap(QtGui.QPixmap("/home/pi/barcode-pi/label.png"))
                 self.label_barcode.update_label()
                 self.spin_copies.setValue(1)
 #            self.label_not_found.setText('')

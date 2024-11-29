@@ -78,7 +78,7 @@ The application can be configured through the GUI:
 To set the XML feed URL via SSH:
 
     ```
-    python3 /home/pi/barcode-pi/set_url.py "XML_FEED_URL"
+        python3 /home/pi/barcode-pi/set_url.py "XML_FEED_URL"
     ```
 
 
@@ -119,16 +119,16 @@ If you encounter issues with the printer:
 ## Uninstallation
 
 To uninstall the application:
-```
-sudo systemctl stop barcode-printer.service && \
-sudo systemctl disable barcode-printer.service && \
-sudo rm -f /etc/systemd/system/barcode-printer.service && \
-sudo systemctl daemon-reload && \
-rm -rf ~/barcode-pi && \
-rm -rf ~/barcode_env && \
-rm -f ~/Desktop/BarcodeApp.desktop && \
-rm -f ~/.config/autostart/barcode_printer.desktop
-```
+    ```
+    sudo systemctl stop barcode-printer.service && \
+    sudo systemctl disable barcode-printer.service && \
+    sudo rm -f /etc/systemd/system/barcode-printer.service && \
+    sudo systemctl daemon-reload && \
+    rm -rf ~/barcode-pi && \
+    rm -rf ~/barcode_env && \
+    rm -f ~/Desktop/BarcodeApp.desktop && \
+    rm -f ~/.config/autostart/barcode_printer.desktop
+    ```
 
 ## Troubleshooting
 

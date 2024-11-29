@@ -26,9 +26,9 @@ A Python-based application for printing barcode labels using a Zebra ZD220 print
 ## Quick Installation
 
 Install the application with a single command:
-```
-curl -sSL https://raw.githubusercontent.com/Baanaaana/barcode-pi/main/install_barcode_app.sh | bash
-```
+    ```
+    curl -sSL https://raw.githubusercontent.com/Baanaaana/barcode-pi/main/install_barcode_app.sh | bash
+    ```
 This will:
 - Install all required dependencies
 - Set up the printer configuration
@@ -42,17 +42,17 @@ This will:
 If you prefer to review the installation script first:
 
 1. Download the installation script:
-```
-wget https://raw.githubusercontent.com/Baanaaana/barcode-pi/main/install_barcode_app.sh
-```
+    ```
+    wget https://raw.githubusercontent.com/Baanaaana/barcode-pi/main/install_barcode_app.sh
+    ```
 2. Make it executable:
-```
-chmod +x install_barcode_app.sh
-```
+    ```
+    chmod +x install_barcode_app.sh
+    ```
 3. Run the script:
-```
-./install_barcode_app.sh
-```
+    ```
+    ./install_barcode_app.sh
+    ```
 
 
 ## Post-Installation
@@ -77,9 +77,9 @@ The application can be configured through the GUI:
 
 To set the XML feed URL via SSH:
 
-```
-python3 /home/pi/barcode-pi/set_url.py "XML_FEED_URL"
-```
+    ```
+    python3 /home/pi/barcode-pi/set_url.py "XML_FEED_URL"
+    ```
 
 
 ## Printer Setup

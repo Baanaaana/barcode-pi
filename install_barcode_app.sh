@@ -40,9 +40,6 @@ sudo systemctl stop barcode-printer.service 2>/dev/null || true
 sudo systemctl disable barcode-printer.service 2>/dev/null || true
 sudo rm -f /etc/systemd/system/barcode-printer.service
 sudo systemctl daemon-reload
-
-# Clean up old directories and files
-rm -rf ~/Desktop/AppV2
 rm -rf ~/barcode-pi
 rm -rf ~/barcode_env
 rm -f ~/Desktop/BarcodeApp.desktop
@@ -115,7 +112,7 @@ sudo usermod -a -G lpadmin $USER
 sudo systemctl start cups
 sudo systemctl enable cups
 
-# Create application directory and ensure it's empty
+# Create application directory
 echo "Creating application directory..."
 rm -rf ~/barcode-pi
 mkdir -p ~/barcode-pi
@@ -124,7 +121,7 @@ cd ~/barcode-pi
 # Download the application files from your repository
 echo "Downloading application files..."
 git clone https://github.com/Baanaaana/barcode-pi.git ./temp
-cp -r ./temp/barcode-pi/* .
+cp -r ./temp/* .
 rm -rf ./temp
 
 # Create required directories and files
@@ -211,6 +208,7 @@ chmod +x ~/Desktop/BarcodeApp.desktop
 chmod +x ~/barcode-pi/run.sh
 chmod +x ~/barcode-pi/run-sleep.sh
 chmod +x ~/barcode-pi/YesBarcode.py
+chmod +x ~/barcode-pi/set_url.py
 
 # Set desktop file as trusted
 gio set ~/Desktop/BarcodeApp.desktop "metadata::trusted" yes
@@ -219,27 +217,6 @@ gio set ~/Desktop/BarcodeApp.desktop "metadata::trusted" yes
 echo "Enabling and starting barcode printer service..."
 sudo systemctl enable barcode-printer.service
 sudo systemctl start barcode-printer.service
-
-# Create set_url.py script
-echo "Creating URL configuration script..."
-cat > ~/barcode-pi/set_url.py << EOL
-from PyQt5.QtCore import QSettings
-
-def set_feed_url(url):
-    settings = QSettings('1', '1')
-    settings.setValue('url', url)
-    print(f"Feed URL has been set to: {url}")
-
-if __name__ == "__main__":
-    import sys
-    if len(sys.argv) != 2:
-        print("Usage: python3 set_url.py <feed_url>")
-        sys.exit(1)
-    set_feed_url(sys.argv[1])
-EOL
-
-# Make the script executable
-chmod +x ~/barcode-pi/set_url.py
 
 echo "Installation completed!"
 echo "Please ensure your Zebra GK420D printer is connected and powered on."

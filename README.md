@@ -26,7 +26,6 @@ A Python-based application for printing barcode labels using a Zebra ZD220 print
 ## Quick Installation
 
 Install the application with a single command:
-
     ```
     curl -sSL https://raw.githubusercontent.com/Baanaaana/barcode-pi/main/install_barcode_app.sh | bash
     ```

@@ -89,9 +89,9 @@ The system includes support for the Zebra ZD220 label printer. To set up the pri
 1. Connect the Zebra ZD220 printer to your Raspberry Pi via USB
 
 2. Run the printer setup commands:
-   ```
+   
    cd ~/barcode-pi && sudo ./setup_zebra_printer.sh && python3 verify_printer.py
-   ```
+   
 
 A test barcode will be printed automatically during setup to confirm everything is working correctly.
 

@@ -146,7 +146,7 @@ If you encounter any issues:
 4. Check application logs for errors
 
 
-
+##
 ## Support
 For issues and feature requests, please use the GitHub issues section.
 

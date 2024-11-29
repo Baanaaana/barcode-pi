@@ -93,6 +93,10 @@ The system includes support for the Zebra ZD220 label printer. To set up the pri
    cd ~/barcode-pi && sudo ./setup_zebra_printer.sh && python3 verify_printer.py
    ```
 
+   ```bash
+   cd ~/barcode-pi && sudo ./setup_zebra_printer.sh && python3 verify_printer.py
+   ```
+
 A test barcode will be printed automatically during setup to confirm everything is working correctly.
 
 Note: The printer is configured to use the raw printer driver, which allows direct ZPL commands to be sent to the printer. This is the recommended setup for Zebra label printers on Linux systems.

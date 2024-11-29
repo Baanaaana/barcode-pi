@@ -55,7 +55,7 @@ echo "Installing additional Python packages..."
 source ~/barcode_env/bin/activate
 pip install python-barcode
 
-# Create zebra.py in the virtual environment
+# Create zebra module
 echo "Creating zebra module..."
 cat > ~/barcode_env/lib/python3.11/site-packages/zebra.py << EOL
 import subprocess
@@ -121,8 +121,6 @@ cd ~/barcode-pi
 # Download the application files from your repository
 echo "Downloading application files..."
 git clone https://github.com/Baanaaana/barcode-pi.git .
-mv AppV2/* .
-rm -rf AppV2
 
 # Create required directories and files
 mkdir -p ~/.config/autostart

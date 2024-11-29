@@ -152,7 +152,6 @@ class MainWindow_exec(QtWidgets.QMainWindow, Ui_MainWindow):
         self.box_url.setText(self.url)
 
         self.default_printer=self.settings.value('default_printer','')
-#        self.copies=self.settings.value('copies','1')
         self.autoprint=self.settings.value('autoprint',True)
         print(self.autoprint)
         if self.autoprint=='true':
@@ -160,7 +159,6 @@ class MainWindow_exec(QtWidgets.QMainWindow, Ui_MainWindow):
         elif self.autoprint=='false':
             self.autoprint=False
 
-#        self.spin_copies.setValue(int(self.copies))
         self.check_autoprint.setChecked(self.autoprint)
 
         print( self.spin_copies.value() )
@@ -169,6 +167,11 @@ class MainWindow_exec(QtWidgets.QMainWindow, Ui_MainWindow):
         self.check_autoprint.stateChanged.connect(self.set_autoprint)
         self.combo_printers.currentIndexChanged.connect(self.change_printer)
 
+        self.label_barcode.setPixmap(QtGui.QPixmap("/home/pi/barcode-pi/label.png"))
+
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap("/home/pi/barcode-pi/refresh.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.btn_refresh.setIcon(icon)
 
         self.z = zebra()
 
@@ -244,7 +247,7 @@ class MainWindow_exec(QtWidgets.QMainWindow, Ui_MainWindow):
             url = self.url
             r = requests.get(url, stream=True, timeout = 20)
             
-            with open('/home/pi/Desktop/AppV2/barcode-label-data.xml', 'wb') as fd:
+            with open('/home/pi/barcode-pi/barcode-label-data.xml', 'wb') as fd:
                 for chunk in r.iter_content(2000):
                     fd.write(chunk)
             self.label_not_found.setText('Klaar!')                    
@@ -254,7 +257,7 @@ class MainWindow_exec(QtWidgets.QMainWindow, Ui_MainWindow):
 
 
 
-        root = ET.parse('/home/pi/Desktop/AppV2/barcode-label-data.xml').getroot()
+        root = ET.parse('/home/pi/barcode-pi/barcode-label-data.xml').getroot()
         self.sku_dict={}
         self.ean_dict={}
         for type_tag in root.findall('item'):    

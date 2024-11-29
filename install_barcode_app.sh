@@ -52,7 +52,59 @@ python3 -m venv ~/barcode_env --system-site-packages
 # Activate virtual environment and install additional packages
 echo "Installing additional Python packages..."
 source ~/barcode_env/bin/activate
-pip install python-barcode zebra-printer
+pip install python-barcode
+
+# Create zebra.py in the virtual environment
+echo "Creating zebra module..."
+cat > ~/barcode_env/lib/python3.11/site-packages/zebra.py << EOL
+import subprocess
+import sys
+
+class zebra(object):
+    def __init__(self, queue=None):
+        self.queue = queue
+
+    def _output_unix(self, commands):
+        if self.queue == 'zebra_python_unittest':
+            p = subprocess.Popen(['cat','-'], stdin=subprocess.PIPE)
+        else:
+            p = subprocess.Popen(['lpr','-P{}'.format(self.queue),'-l'], stdin=subprocess.PIPE)
+        p.communicate(commands)
+        p.stdin.close()
+
+    def output(self, commands):
+        assert self.queue is not None
+        if sys.version_info[0] == 3:
+            if type(commands) != bytes:
+                commands = str(commands).encode()
+        else:
+            commands = str(commands).encode()
+        self._output_unix(commands)
+
+    def getqueues(self):
+        queues = []
+        try:
+            output = subprocess.check_output(['lpstat','-p'], universal_newlines=True)
+        except subprocess.CalledProcessError:
+            return []
+        for line in output.split('\n'):
+            if line.startswith('printer'):
+                queues.append(line.split(' ')[1])
+        return queues
+
+    def setqueue(self, queue):
+        self.queue = queue
+
+    def setup(self, direct_thermal=None, label_height=None, label_width=None):
+        commands = '\n'
+        if direct_thermal:
+            commands += ('OD\n')
+        if label_height:
+           commands += ('Q%s,%s\n'%(label_height[0],label_height[1]))
+        if label_width:
+            commands += ('q%s\n'%label_width)
+        self.output(commands)
+EOL
 
 # Install CUPS driver for Zebra GK420D
 echo "Setting up CUPS for Zebra printer..."

@@ -125,7 +125,7 @@ cd ~/barcode-pi
 echo "Downloading application files..."
 git clone https://github.com/Baanaaana/barcode-pi.git ./temp
 mkdir -p barcode-pi
-mv ./temp/AppV2/* ./barcode-pi/
+mv ./temp/barcode-pi/* ./barcode-pi/
 rm -rf ./temp
 
 # Create required directories and files

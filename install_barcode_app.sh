@@ -40,6 +40,8 @@ sudo systemctl stop barcode-printer.service 2>/dev/null || true
 sudo systemctl disable barcode-printer.service 2>/dev/null || true
 sudo rm -f /etc/systemd/system/barcode-printer.service
 sudo systemctl daemon-reload
+
+# Clean up old directories and files
 rm -rf ~/Desktop/AppV2
 rm -rf ~/barcode-pi
 rm -rf ~/barcode_env
@@ -113,8 +115,9 @@ sudo usermod -a -G lpadmin $USER
 sudo systemctl start cups
 sudo systemctl enable cups
 
-# Create application directory
+# Create application directory and ensure it's empty
 echo "Creating application directory..."
+rm -rf ~/barcode-pi
 mkdir -p ~/barcode-pi/barcode-pi
 cd ~/barcode-pi
 
@@ -123,6 +126,9 @@ echo "Downloading application files..."
 git clone https://github.com/Baanaaana/barcode-pi.git .
 mv AppV2/* barcode-pi/
 rm -rf AppV2
+
+# Create required directories and files
+mkdir -p ~/.config/autostart
 
 # Update run scripts
 echo "Updating run scripts..."

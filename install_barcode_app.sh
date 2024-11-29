@@ -220,6 +220,27 @@ echo "Enabling and starting barcode printer service..."
 sudo systemctl enable barcode-printer.service
 sudo systemctl start barcode-printer.service
 
+# Create set_url.py script
+echo "Creating URL configuration script..."
+cat > ~/barcode-pi/set_url.py << EOL
+from PyQt5.QtCore import QSettings
+
+def set_feed_url(url):
+    settings = QSettings('1', '1')
+    settings.setValue('url', url)
+    print(f"Feed URL has been set to: {url}")
+
+if __name__ == "__main__":
+    import sys
+    if len(sys.argv) != 2:
+        print("Usage: python3 set_url.py <feed_url>")
+        sys.exit(1)
+    set_feed_url(sys.argv[1])
+EOL
+
+# Make the script executable
+chmod +x ~/barcode-pi/set_url.py
+
 echo "Installation completed!"
 echo "Please ensure your Zebra GK420D printer is connected and powered on."
 echo "The application will start automatically after reboot."

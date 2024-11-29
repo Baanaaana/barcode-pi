@@ -64,6 +64,14 @@ The application can be configured through the GUI:
 - Auto-print toggle
 - Number of copies
 
+## XML Feed URL
+
+To set the XML feed URL via SSH:
+
+```
+python3 /home/pi/barcode-pi/set_url.py "XML_FEED_URL"
+```
+
 ## Uninstallation
 
 To uninstall the application:

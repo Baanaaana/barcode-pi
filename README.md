@@ -1,5 +1,3 @@
-# Barcode System Setup
-
 # Barcode Label Printer for Raspberry Pi
 
 A Python-based application for printing barcode labels using a Zebra ZD220 printer on Raspberry Pi. The application fetches product data from an XML feed and allows for easy barcode label printing.

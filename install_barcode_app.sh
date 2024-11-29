@@ -118,14 +118,15 @@ sudo systemctl enable cups
 # Create application directory and ensure it's empty
 echo "Creating application directory..."
 rm -rf ~/barcode-pi
-mkdir -p ~/barcode-pi/barcode-pi
+mkdir -p ~/barcode-pi
 cd ~/barcode-pi
 
 # Download the application files from your repository
 echo "Downloading application files..."
-git clone https://github.com/Baanaaana/barcode-pi.git .
-mv AppV2/* barcode-pi/
-rm -rf AppV2
+git clone https://github.com/Baanaaana/barcode-pi.git ./temp
+mkdir -p barcode-pi
+mv ./temp/AppV2/* ./barcode-pi/
+rm -rf ./temp
 
 # Create required directories and files
 mkdir -p ~/.config/autostart

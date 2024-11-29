@@ -1,3 +1,5 @@
+# Barcode System Setup
+
 # Barcode Label Printer for Raspberry Pi
 
 A Python-based application for printing barcode labels using a Zebra GK420D printer on Raspberry Pi. The application fetches product data from an XML feed and allows for easy barcode label printing.
@@ -71,6 +73,23 @@ To set the XML feed URL via SSH:
 ```
 python3 /home/pi/barcode-pi/set_url.py "XML_FEED_URL"
 ```
+
+## Printer Setup
+
+The system includes support for the Zebra GK420D label printer. To set up the printer:
+
+1. Connect the Zebra GK420D printer to your Raspberry Pi via USB
+2. Run the printer setup script:
+   ```bash
+   sudo ./setup_zebra_printer.sh
+   ```
+3. Verify the printer setup:
+   ```bash
+   python3 verify_printer.py
+   ```
+4. A test barcode will be printed automatically during setup
+
+If the test print is successful, the barcode application will be automatically configured to use the Zebra GK420D printer.
 
 ## Uninstallation
 

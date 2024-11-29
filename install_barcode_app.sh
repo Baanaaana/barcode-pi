@@ -13,6 +13,7 @@ sudo apt-get update
 echo "Installing system dependencies..."
 sudo apt-get install -y \
     cups \
+    cups-bsd \
     python3 \
     python3-pip \
     python3-pyqt5 \

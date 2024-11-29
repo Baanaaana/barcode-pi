@@ -11,7 +11,7 @@ fi
 # Install required packages
 echo "Installing required packages..."
 apt-get update
-apt-get install -y cups cups-client python3-cups
+apt-get install -y cups cups-client cups-bsd python3-cups
 
 # Restart CUPS service
 systemctl restart cups

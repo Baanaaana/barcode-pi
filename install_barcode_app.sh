@@ -25,7 +25,11 @@ sudo apt-get install -y \
     python3-dev \
     build-essential \
     python3-wheel \
-    python3-setuptools
+    python3-setuptools \
+    python3-requests \
+    python3-pil \
+    python3-appdirs \
+    python3-xmltodict
 
 # Remove old installation if exists
 echo "Cleaning up old installation..."
@@ -47,13 +51,8 @@ echo "Installing Python packages in virtual environment..."
 source ~/barcode_env/bin/activate
 pip install --upgrade pip wheel setuptools
 pip install \
-    requests \
     python-barcode \
-    pycups \
-    pillow \
-    appdirs \
-    xmltodict \
-    PyQt5
+    pycups
 
 # Install CUPS driver for Zebra GK420D
 echo "Setting up CUPS for Zebra printer..."
@@ -82,7 +81,7 @@ cat > ~/Desktop/AppV2/run.sh << EOL
 cd /home/pi/Desktop/AppV2
 source ~/barcode_env/bin/activate
 export DISPLAY=:0
-export PYTHONPATH=/home/pi/Desktop/AppV2
+export PYTHONPATH=/home/pi/Desktop/AppV2:/usr/lib/python3/dist-packages
 export QT_QPA_PLATFORM=xcb
 python3 YesBarcode.py
 EOL
@@ -93,7 +92,7 @@ sleep 10
 cd /home/pi/Desktop/AppV2
 source ~/barcode_env/bin/activate
 export DISPLAY=:0
-export PYTHONPATH=/home/pi/Desktop/AppV2
+export PYTHONPATH=/home/pi/Desktop/AppV2:/usr/lib/python3/dist-packages
 export QT_QPA_PLATFORM=xcb
 python3 YesBarcode.py
 EOL
@@ -137,6 +136,7 @@ User=pi
 Environment=DISPLAY=:0
 Environment=XAUTHORITY=/home/pi/.Xauthority
 Environment=QT_QPA_PLATFORM=xcb
+Environment=PYTHONPATH=/home/pi/Desktop/AppV2:/usr/lib/python3/dist-packages
 WorkingDirectory=/home/pi/Desktop/AppV2
 ExecStart=/bin/bash -c 'source ~/barcode_env/bin/activate && exec /home/pi/Desktop/AppV2/run-sleep.sh'
 Restart=always

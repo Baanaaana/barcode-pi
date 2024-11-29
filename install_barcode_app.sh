@@ -115,36 +115,35 @@ sudo systemctl enable cups
 
 # Create application directory
 echo "Creating application directory..."
-mkdir -p ~/barcode-pi
+mkdir -p ~/barcode-pi/barcode-pi
 cd ~/barcode-pi
 
 # Download the application files from your repository
 echo "Downloading application files..."
 git clone https://github.com/Baanaaana/barcode-pi.git .
-
-# Create required directories and files
-mkdir -p ~/.config/autostart
+mv AppV2/* barcode-pi/
+rm -rf AppV2
 
 # Update run scripts
 echo "Updating run scripts..."
-cat > ~/barcode-pi/run.sh << EOL
+cat > ~/barcode-pi/barcode-pi/run.sh << EOL
 #!/bin/bash
-cd /home/pi/barcode-pi
+cd /home/pi/barcode-pi/barcode-pi
 source ~/barcode_env/bin/activate
 export DISPLAY=:0
-export PYTHONPATH=/home/pi/barcode-pi:/usr/lib/python3/dist-packages
+export PYTHONPATH=/home/pi/barcode-pi/barcode-pi:/usr/lib/python3/dist-packages
 export QT_QPA_PLATFORM=xcb
 pyuic5 -x neo_bar.ui -o neo_bar.py
 python3 YesBarcode.py
 EOL
 
-cat > ~/barcode-pi/run-sleep.sh << EOL
+cat > ~/barcode-pi/barcode-pi/run-sleep.sh << EOL
 #!/bin/bash
 sleep 10
-cd /home/pi/barcode-pi
+cd /home/pi/barcode-pi/barcode-pi
 source ~/barcode_env/bin/activate
 export DISPLAY=:0
-export PYTHONPATH=/home/pi/barcode-pi:/usr/lib/python3/dist-packages
+export PYTHONPATH=/home/pi/barcode-pi/barcode-pi:/usr/lib/python3/dist-packages
 export QT_QPA_PLATFORM=xcb
 pyuic5 -x neo_bar.ui -o neo_bar.py
 python3 YesBarcode.py
@@ -156,7 +155,7 @@ cat > ~/.config/autostart/barcode_printer.desktop << EOL
 [Desktop Entry]
 Type=Application
 Name=Barcode Printer
-Exec=/bin/bash /home/pi/barcode-pi/run-sleep.sh
+Exec=/bin/bash /home/pi/barcode-pi/barcode-pi/run-sleep.sh
 Hidden=false
 NoDisplay=false
 X-GNOME-Autostart-enabled=true
@@ -170,8 +169,8 @@ Version=1.0
 Type=Application
 Name=Barcode App
 Comment=Start Barcode Label Printer
-Exec=/bin/bash /home/pi/barcode-pi/run.sh
-Icon=/home/pi/barcode-pi/icon.ico
+Exec=/bin/bash /home/pi/barcode-pi/barcode-pi/run.sh
+Icon=/home/pi/barcode-pi/barcode-pi/icon.ico
 Terminal=false
 Categories=Utility;
 EOL
@@ -189,9 +188,9 @@ User=pi
 Environment=DISPLAY=:0
 Environment=XAUTHORITY=/home/pi/.Xauthority
 Environment=QT_QPA_PLATFORM=xcb
-Environment=PYTHONPATH=/home/pi/barcode-pi:/usr/lib/python3/dist-packages
-WorkingDirectory=/home/pi/barcode-pi
-ExecStart=/bin/bash -c 'source ~/barcode_env/bin/activate && exec /home/pi/barcode-pi/run-sleep.sh'
+Environment=PYTHONPATH=/home/pi/barcode-pi/barcode-pi:/usr/lib/python3/dist-packages
+WorkingDirectory=/home/pi/barcode-pi/barcode-pi
+ExecStart=/bin/bash -c 'source ~/barcode_env/bin/activate && exec /home/pi/barcode-pi/barcode-pi/run-sleep.sh'
 Restart=always
 RestartSec=3
 
@@ -203,9 +202,9 @@ EOL
 echo "Setting permissions..."
 chmod +x ~/.config/autostart/barcode_printer.desktop
 chmod +x ~/Desktop/BarcodeApp.desktop
-chmod +x ~/barcode-pi/run.sh
-chmod +x ~/barcode-pi/run-sleep.sh
-chmod +x ~/barcode-pi/YesBarcode.py
+chmod +x ~/barcode-pi/barcode-pi/run.sh
+chmod +x ~/barcode-pi/barcode-pi/run-sleep.sh
+chmod +x ~/barcode-pi/barcode-pi/YesBarcode.py
 
 # Set desktop file as trusted
 gio set ~/Desktop/BarcodeApp.desktop "metadata::trusted" yes

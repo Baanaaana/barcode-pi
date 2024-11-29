@@ -29,7 +29,9 @@ sudo apt-get install -y \
     python3-requests \
     python3-pil \
     python3-appdirs \
-    python3-xmltodict
+    python3-xmltodict \
+    python3-barcode \
+    python3-cups
 
 # Remove old installation if exists
 echo "Cleaning up old installation..."
@@ -44,15 +46,11 @@ rm -f ~/.config/autostart/barcode_printer.desktop
 
 # Create virtual environment
 echo "Creating Python virtual environment..."
-python3 -m venv ~/barcode_env
+python3 -m venv ~/barcode_env --system-site-packages
 
-# Activate virtual environment and install Python packages
-echo "Installing Python packages in virtual environment..."
+# Activate virtual environment
+echo "Activating virtual environment..."
 source ~/barcode_env/bin/activate
-pip install --upgrade pip wheel setuptools
-pip install \
-    python-barcode \
-    pycups
 
 # Install CUPS driver for Zebra GK420D
 echo "Setting up CUPS for Zebra printer..."

@@ -77,7 +77,7 @@ The application can be configured through the GUI:
 
 To set the XML feed URL via SSH:
 
-    ```
+    ```bash
     python3 /home/pi/barcode-pi/set_url.py "XML_FEED_URL"
     ```
 

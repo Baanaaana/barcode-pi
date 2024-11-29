@@ -106,6 +106,18 @@ class zebra(object):
         self.output(commands)
 EOL
 
+# Create application directory
+echo "Creating application directory..."
+rm -rf ~/barcode-pi
+mkdir -p ~/barcode-pi
+cd ~/barcode-pi
+
+# Download the application files from your repository
+echo "Downloading application files..."
+git clone https://github.com/Baanaaana/barcode-pi.git ./temp
+cp -r ./temp/barcode-pi/* .
+rm -rf ./temp
+
 # Create printer setup files
 echo "Creating printer setup files..."
 cat > ~/barcode-pi/setup_zebra_printer.sh << 'EOL'
@@ -263,18 +275,6 @@ To set up your Zebra GK420D printer:
 
 A test barcode will be printed automatically during setup.
 EOL
-
-# Create application directory
-echo "Creating application directory..."
-rm -rf ~/barcode-pi
-mkdir -p ~/barcode-pi
-cd ~/barcode-pi
-
-# Download the application files from your repository
-echo "Downloading application files..."
-git clone https://github.com/Baanaaana/barcode-pi.git ./temp
-cp -r ./temp/barcode-pi/* .
-rm -rf ./temp
 
 # Create printer configuration
 echo "Creating printer configuration..."

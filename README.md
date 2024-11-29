@@ -88,3 +88,9 @@ If you encounter any issues:
 ## Support
 
 For issues and feature requests, please use the GitHub issues section.
+
+The application will be installed to:
+- Main application: `/home/pi/barcode-pi/`
+- Virtual environment: `/home/pi/barcode_env/`
+- Desktop shortcut: `~/Desktop/BarcodeApp.desktop`
+- Autostart entry: `~/.config/autostart/barcode_printer.desktop`

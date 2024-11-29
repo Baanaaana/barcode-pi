@@ -32,7 +32,8 @@ sudo apt-get install -y \
     python3-xmltodict \
     python3-cups \
     pyqt5-dev-tools \
-    qttools5-dev-tools
+    qttools5-dev-tools \
+    printer-driver-zpl2
 
 # Remove old installation if exists
 echo "Cleaning up old installation..."
@@ -106,11 +107,163 @@ class zebra(object):
         self.output(commands)
 EOL
 
-# Install CUPS driver for Zebra GK420D
-echo "Setting up CUPS for Zebra printer..."
-sudo usermod -a -G lpadmin $USER
-sudo systemctl start cups
-sudo systemctl enable cups
+# Create printer setup files
+echo "Creating printer setup files..."
+cat > ~/barcode-pi/setup_zebra_printer.sh << 'EOL'
+#!/bin/bash
+
+echo "Setting up Zebra GK420D printer..."
+
+# Check if running as root
+if [ "$EUID" -ne 0 ]; then 
+    echo "Please run as root (use sudo)"
+    exit 1
+fi
+
+# Install required packages
+echo "Installing required packages..."
+apt-get update
+apt-get install -y cups cups-client printer-driver-zpl2 python3-cups
+
+# Restart CUPS service
+systemctl restart cups
+
+# Add pi user to lpadmin group for printer management
+usermod -a -G lpadmin pi
+
+# Stop CUPS service to modify configuration
+systemctl stop cups
+
+# Configure CUPS to allow remote administration
+sed -i 's/Listen localhost:631/Port 631/' /etc/cups/cupsd.conf
+sed -i 's/Browsing Off/Browsing On/' /etc/cups/cupsd.conf
+
+# Add network access to CUPS
+cat >> /etc/cups/cupsd.conf << EOF
+
+# Allow remote access
+<Location />
+  Order allow,deny
+  Allow @LOCAL
+</Location>
+
+<Location /admin>
+  Order allow,deny
+  Allow @LOCAL
+</Location>
+
+<Location /admin/conf>
+  AuthType Default
+  Require user @SYSTEM
+  Order allow,deny
+  Allow @LOCAL
+</Location>
+EOF
+
+# Start CUPS service
+systemctl start cups
+
+# Wait for CUPS to fully start
+sleep 5
+
+# Add Zebra GK420D printer
+echo "Adding Zebra GK420D printer..."
+lpadmin -p ZebraGK420D \
+    -E \
+    -v usb://Zebra/GK420d \
+    -m zpl2.ppd \
+    -o printer-is-shared=true
+
+# Set as default printer
+lpoptions -d ZebraGK420D
+
+# Configure default settings for 4x6 labels
+lpoptions -p ZebraGK420D -o media=w4h6.0 -o resolution=203dpi
+
+# Create test label
+cat > /tmp/test_label.zpl << EOF
+^XA
+^FO50,50^BY3
+^BCN,100,Y,N,N
+^FD123456789^FS
+^FO50,170^A0N,30,30
+^FDTest Barcode^FS
+^XZ
+EOF
+
+# Test print the barcode
+echo "Printing test barcode..."
+lp -d ZebraGK420D /tmp/test_label.zpl
+
+# Update the barcode application configuration
+if [ -f "/home/pi/barcode-pi/config.ini" ]; then
+    echo "Updating barcode application configuration..."
+    sed -i 's/^printer_name=.*/printer_name=ZebraGK420D/' /home/pi/barcode-pi/config.ini
+else
+    echo "Creating barcode application configuration..."
+    cat > /home/pi/barcode-pi/config.ini << EOF
+[Printer]
+printer_name=ZebraGK420D
+auto_print=true
+copies=1
+EOF
+fi
+
+# Set correct permissions for the config file
+chown pi:pi /home/pi/barcode-pi/config.ini
+
+echo "Printer setup complete!"
+echo "Test barcode has been sent to the printer"
+echo "The barcode application has been configured to use the Zebra GK420D printer"
+echo "You can check printer status by running: lpstat -p ZebraGK420D"
+EOL
+
+cat > ~/barcode-pi/verify_printer.py << 'EOL'
+#!/usr/bin/env python3
+import cups
+import sys
+
+def verify_printer():
+    conn = cups.Connection()
+    printers = conn.getPrinters()
+    
+    zebra_printer = None
+    for printer in printers:
+        if printer == 'ZebraGK420D':
+            zebra_printer = printer
+            break
+    
+    if zebra_printer:
+        print("✓ Zebra GK420D printer found and configured")
+        print(f"Printer status: {printers[zebra_printer]['printer-state-message']}")
+        return True
+    else:
+        print("✗ Zebra GK420D printer not found")
+        print("Available printers:", list(printers.keys()))
+        return False
+
+if __name__ == "__main__":
+    success = verify_printer()
+    sys.exit(0 if success else 1)
+EOL
+
+# Make printer setup files executable
+chmod +x ~/barcode-pi/setup_zebra_printer.sh
+chmod +x ~/barcode-pi/verify_printer.py
+
+# Create printer setup instructions
+echo "Creating printer setup instructions..."
+cat > ~/barcode-pi/PRINTER_SETUP.txt << EOL
+To set up your Zebra GK420D printer:
+
+1. Connect the printer via USB to your Raspberry Pi
+2. Run the setup script:
+   sudo ./setup_zebra_printer.sh
+3. Verify the printer setup:
+   python3 verify_printer.py
+
+A test barcode will be printed automatically during setup.
+EOL
 
 # Create application directory
 echo "Creating application directory..."
@@ -124,82 +277,60 @@ git clone https://github.com/Baanaaana/barcode-pi.git ./temp
 cp -r ./temp/barcode-pi/* .
 rm -rf ./temp
 
+# Create printer configuration
+echo "Creating printer configuration..."
+cat > ~/barcode-pi/config.ini << EOF
+[Printer]
+printer_name=ZebraGK420D
+auto_print=true
+copies=1
+EOF
+
 # Create required directories and files
 mkdir -p ~/.config/autostart
 
-# Update run scripts
-echo "Updating run scripts..."
-cat > ~/barcode-pi/run.sh << EOL
-#!/bin/bash
-cd /home/pi/barcode-pi
-source ~/barcode_env/bin/activate
-export DISPLAY=:0
-export PYTHONPATH=/home/pi/barcode-pi:/usr/lib/python3/dist-packages
-export QT_QPA_PLATFORM=xcb
-pyuic5 -x neo_bar.ui -o neo_bar.py
-python3 YesBarcode.py
-EOL
+# Create desktop shortcut
+cat > ~/Desktop/BarcodeApp.desktop << EOF
+[Desktop Entry]
+Type=Application
+Name=Barcode App
+Exec=/home/pi/barcode-pi/run.sh
+Icon=applications-system
+Terminal=false
+Categories=Utility;
+EOF
 
-cat > ~/barcode-pi/run-sleep.sh << EOL
-#!/bin/bash
-sleep 10
-cd /home/pi/barcode-pi
-source ~/barcode_env/bin/activate
-export DISPLAY=:0
-export PYTHONPATH=/home/pi/barcode-pi:/usr/lib/python3/dist-packages
-export QT_QPA_PLATFORM=xcb
-pyuic5 -x neo_bar.ui -o neo_bar.py
-python3 YesBarcode.py
-EOL
+chmod +x ~/Desktop/BarcodeApp.desktop
 
 # Create autostart entry
-echo "Creating autostart entry..."
-cat > ~/.config/autostart/barcode_printer.desktop << EOL
+mkdir -p ~/.config/autostart
+cat > ~/.config/autostart/barcode_printer.desktop << EOF
 [Desktop Entry]
 Type=Application
 Name=Barcode Printer
-Exec=/bin/bash /home/pi/barcode-pi/run-sleep.sh
-Hidden=false
-NoDisplay=false
-X-GNOME-Autostart-enabled=true
-EOL
-
-# Create desktop shortcut
-echo "Creating desktop shortcut..."
-cat > ~/Desktop/BarcodeApp.desktop << EOL
-[Desktop Entry]
-Version=1.0
-Type=Application
-Name=Barcode App
-Comment=Start Barcode Label Printer
-Exec=/bin/bash /home/pi/barcode-pi/run.sh
-Icon=/home/pi/barcode-pi/icon.ico
+Exec=/home/pi/barcode-pi/run-sleep.sh
 Terminal=false
-Categories=Utility;
-EOL
+EOF
 
-# Create systemd service
-echo "Creating systemd service..."
-sudo tee /etc/systemd/system/barcode-printer.service << EOL
+# Set up systemd service
+sudo bash -c 'cat > /etc/systemd/system/barcode-printer.service << EOF
 [Unit]
-Description=Barcode Printer Application
+Description=Barcode Printer Service
 After=network.target
 
 [Service]
-Type=simple
+ExecStart=/home/pi/barcode-pi/run.sh
 User=pi
 Environment=DISPLAY=:0
 Environment=XAUTHORITY=/home/pi/.Xauthority
-Environment=QT_QPA_PLATFORM=xcb
-Environment=PYTHONPATH=/home/pi/barcode-pi:/usr/lib/python3/dist-packages
-WorkingDirectory=/home/pi/barcode-pi
-ExecStart=/bin/bash -c 'source ~/barcode_env/bin/activate && exec /home/pi/barcode-pi/run-sleep.sh'
-Restart=always
-RestartSec=3
 
 [Install]
 WantedBy=multi-user.target
-EOL
+EOF'
+
+# Enable and start the service
+sudo systemctl enable barcode-printer.service
+sudo systemctl start barcode-printer.service
 
 # Set permissions
 echo "Setting permissions..."
@@ -209,17 +340,9 @@ chmod +x ~/barcode-pi/run.sh
 chmod +x ~/barcode-pi/run-sleep.sh
 chmod +x ~/barcode-pi/YesBarcode.py
 chmod +x ~/barcode-pi/set_url.py
+chmod +x ~/barcode-pi/setup_zebra_printer.sh
+chmod +x ~/barcode-pi/verify_printer.py
 
-# Set desktop file as trusted
-gio set ~/Desktop/BarcodeApp.desktop "metadata::trusted" yes
-
-# Enable and start the service
-echo "Enabling and starting barcode printer service..."
-sudo systemctl enable barcode-printer.service
-sudo systemctl start barcode-printer.service
-
-echo "Installation completed!"
-echo "Please ensure your Zebra GK420D printer is connected and powered on."
-echo "The application will start automatically after reboot."
-echo "You can also start it manually using the desktop shortcut."
-echo "You may need to restart your system for all changes to take effect." 
+echo "Installation complete!"
+echo "The application will start automatically on next boot"
+echo "You can also start it manually using the desktop shortcut" 

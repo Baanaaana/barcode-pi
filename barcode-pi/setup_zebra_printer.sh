@@ -11,7 +11,7 @@ fi
 # Install required packages
 echo "Installing required packages..."
 apt-get update
-apt-get install -y cups cups-client printer-driver-zpl2 python3-cups
+apt-get install -y cups cups-client python3-cups
 
 # Restart CUPS service
 systemctl restart cups
@@ -68,7 +68,7 @@ lpoptions -d ZebraGK420D
 # Configure default settings for 4x6 labels
 lpoptions -p ZebraGK420D -o media=w4h6.0 -o resolution=203dpi
 
-# After setting up the printer, create a test barcode file
+# Create test label
 cat > /tmp/test_label.zpl << EOF
 ^XA
 ^FO50,50^BY3

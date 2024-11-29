@@ -122,7 +122,7 @@ fi
 # Install required packages
 echo "Installing required packages..."
 apt-get update
-apt-get install -y cups cups-client printer-driver-zpl2 python3-cups
+apt-get install -y cups cups-client python3-cups
 
 # Restart CUPS service
 systemctl restart cups
@@ -170,7 +170,7 @@ echo "Adding Zebra GK420D printer..."
 lpadmin -p ZebraGK420D \
     -E \
     -v usb://Zebra/GK420d \
-    -m zpl2.ppd \
+    -m raw \
     -o printer-is-shared=true
 
 # Set as default printer

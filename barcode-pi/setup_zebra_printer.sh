@@ -54,34 +54,48 @@ systemctl start cups
 # Wait for CUPS to fully start
 sleep 5
 
-# Add Zebra ZD220 printer
+# Remove existing printer if it exists
+lpadmin -x ZebraZD220 2>/dev/null || true
+
+# Add Zebra ZD220 printer with specific settings
 echo "Adding Zebra ZD220 printer..."
 lpadmin -p ZebraZD220 \
     -E \
-    -v usb://Zebra/ZD220 \
-    -m raw \
-    -o printer-is-shared=true
+    -v "usb://Zebra/ZD220?serial=*" \
+    -m drv:///sample.drv/zebra.ppd \
+    -o PageSize=Custom.4x6in \
+    -o printer-is-shared=true \
+    -o printer-error-policy=abort-job
 
 # Set as default printer
 lpoptions -d ZebraZD220
 
-# Configure default settings for 4x6 labels
-lpoptions -p ZebraZD220 -o media=w4h6.0 -o resolution=203dpi
+# Configure specific settings for ZD220
+lpoptions -p ZebraZD220 \
+    -o Resolution=203dpi \
+    -o PrintDensity=Normal \
+    -o PrintSpeed=4inch/sec \
+    -o MediaType=Labels
 
-# Create test label
+# Create test label with specific ZD220 settings
 cat > /tmp/test_label.zpl << EOF
 ^XA
+^MMT
+^PW406
+^LL0305
+^LS0
 ^FO50,50^BY3
 ^BCN,100,Y,N,N
 ^FD123456789^FS
 ^FO50,170^A0N,30,30
 ^FDTest Barcode^FS
+^PQ1
 ^XZ
 EOF
 
 # Test print the barcode
 echo "Printing test barcode..."
-lp -d ZebraZD220 /tmp/test_label.zpl
+lp -d ZebraZD220 -o raw /tmp/test_label.zpl
 
 # Update the barcode application configuration
 if [ -f "/home/pi/barcode-pi/config.ini" ]; then
@@ -100,7 +114,18 @@ fi
 # Set correct permissions for the config file
 chown pi:pi /home/pi/barcode-pi/config.ini
 
+# Restart CUPS to apply all changes
+systemctl restart cups
+sleep 5
+
 echo "Printer setup complete!"
 echo "Test barcode has been sent to the printer"
 echo "The barcode application has been configured to use the Zebra ZD220 printer"
-echo "You can check printer status by running: lpstat -p ZebraZD220" 
+echo "You can check printer status by running: lpstat -p ZebraZD220"
+
+# Additional debugging information
+echo -e "\nPrinter Details:"
+lpstat -v ZebraZD220
+lpstat -p ZebraZD220
+echo -e "\nUSB Connection:"
+lsusb | grep Zebra 

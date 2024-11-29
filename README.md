@@ -6,7 +6,6 @@ A Python-based application for printing barcode labels using a Zebra ZD220 print
 
 
 ## Features
-
 - Compatible with Zebra ZD220 label printer
 - XML feed integration for product data
 - User-friendly GUI interface
@@ -17,7 +16,6 @@ A Python-based application for printing barcode labels using a Zebra ZD220 print
 
 
 ## Requirements
-
 - Raspberry Pi (tested on Raspberry Pi OS)
 - Zebra ZD220 label printer
 - Internet connection for XML feed
@@ -25,7 +23,6 @@ A Python-based application for printing barcode labels using a Zebra ZD220 print
 
 
 ## Quick Installation
-
 Install the application with a single command:
 ```bash
 curl -sSL https://raw.githubusercontent.com/Baanaaana/barcode-pi/main/install_barcode_app.sh | bash
@@ -40,7 +37,6 @@ This will:
 
 
 ## Manual Installation
-
 If you prefer to review the installation script first:
 
 1. Download the installation script:
@@ -60,7 +56,6 @@ chmod +x install_barcode_app.sh
 
 
 ## Post-Installation
-
 After installation:
 1. The application will start automatically after system boot
 2. You can find a desktop shortcut to launch the app manually
@@ -69,7 +64,6 @@ After installation:
 
 
 ## Configuration
-
 The application can be configured through the GUI:
 - XML Feed URL
 - Printer selection
@@ -78,7 +72,6 @@ The application can be configured through the GUI:
 
 
 ## XML Feed URL
-
 To set the XML feed URL via SSH:
 ```bash
 python3 /home/pi/barcode-pi/set_url.py "XML_FEED_URL"
@@ -86,7 +79,6 @@ python3 /home/pi/barcode-pi/set_url.py "XML_FEED_URL"
 
 
 ## Printer Setup
-
 The system includes support for the Zebra ZD220 label printer. To set up the printer:
 
 1. Connect the Zebra ZD220 printer to your Raspberry Pi via USB
@@ -102,7 +94,6 @@ Note: The printer is configured to use the raw printer driver, which allows dire
 
 
 ### Troubleshooting Printer Setup
-
 If you encounter issues with the printer:
 
 1. Ensure the printer is properly connected via USB and powered on
@@ -123,7 +114,6 @@ lpstat -p ZebraZD220
 
 
 ## Uninstallation
-
 To uninstall the application:
 ```bash
 sudo systemctl stop barcode-printer.service && \
@@ -138,7 +128,6 @@ rm -f ~/.config/autostart/barcode_printer.desktop
 
 
 ## Troubleshooting
-
 If you encounter any issues:
 1. Ensure your Zebra printer is properly connected and powered on
 2. Check that CUPS service is running (`sudo systemctl status cups`)
@@ -147,7 +136,6 @@ If you encounter any issues:
 
 
 ## Support
-
 For issues and feature requests, please use the GitHub issues section.
 
 The application will be installed to:

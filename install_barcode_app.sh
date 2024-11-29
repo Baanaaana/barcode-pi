@@ -32,8 +32,7 @@ sudo apt-get install -y \
     python3-xmltodict \
     python3-cups \
     pyqt5-dev-tools \
-    qttools5-dev-tools \
-    printer-driver-zpl2
+    qttools5-dev-tools
 
 # Remove old installation if exists
 echo "Cleaning up old installation..."

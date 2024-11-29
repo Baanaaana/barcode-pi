@@ -59,7 +59,7 @@ echo "Adding Zebra GK420D printer..."
 lpadmin -p ZebraGK420D \
     -E \
     -v usb://Zebra/GK420d \
-    -m zpl2.ppd \
+    -m raw \
     -o printer-is-shared=true
 
 # Set as default printer

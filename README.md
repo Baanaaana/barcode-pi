@@ -105,7 +105,25 @@ The system includes support for the Zebra GK420D label printer. To set up the pr
 
 A test barcode will be printed automatically during setup to confirm everything is working correctly.
 
-Note: The printer setup files are automatically installed and made executable during the main application installation. You don't need to download them separately.
+Note: The printer is configured to use the raw printer driver, which allows direct ZPL commands to be sent to the printer. This is the recommended setup for Zebra label printers on Linux systems.
+
+### Troubleshooting Printer Setup
+
+If you encounter issues with the printer:
+
+1. Ensure the printer is properly connected via USB and powered on
+2. Check the USB connection:
+   ```bash
+   lsusb | grep Zebra
+   ```
+3. Verify CUPS is running:
+   ```bash
+   systemctl status cups
+   ```
+4. Check printer status:
+   ```bash
+   lpstat -p ZebraGK420D
+   ```
 
 
 ## Uninstallation

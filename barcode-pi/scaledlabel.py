@@ -16,4 +16,4 @@ class scaledlabel(QtWidgets.QLabel):
         self._pixmap = QtGui.QPixmap(self.pixmap())
         self.setPixmap(self._pixmap.scaled(
             self.width(), self.height(),
-            QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation))
+            QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation)) 

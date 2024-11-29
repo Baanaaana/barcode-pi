@@ -112,15 +112,9 @@ rm -rf ~/barcode-pi
 mkdir -p ~/barcode-pi
 cd ~/barcode-pi
 
-# Download the application files from your repository
-echo "Downloading application files..."
-git clone https://github.com/Baanaaana/barcode-pi.git ./temp
-cp -r ./temp/barcode-pi/* .
-rm -rf ./temp
-
 # Create printer setup files
 echo "Creating printer setup files..."
-cat > ~/barcode-pi/setup_zebra_printer.sh << 'EOL'
+cat > setup_zebra_printer.sh << 'EOL'
 #!/bin/bash
 
 echo "Setting up Zebra GK420D printer..."
@@ -229,7 +223,7 @@ echo "The barcode application has been configured to use the Zebra GK420D printe
 echo "You can check printer status by running: lpstat -p ZebraGK420D"
 EOL
 
-cat > ~/barcode-pi/verify_printer.py << 'EOL'
+cat > verify_printer.py << 'EOL'
 #!/usr/bin/env python3
 import cups
 import sys
@@ -259,8 +253,14 @@ if __name__ == "__main__":
 EOL
 
 # Make printer setup files executable
-chmod +x ~/barcode-pi/setup_zebra_printer.sh
-chmod +x ~/barcode-pi/verify_printer.py
+chmod +x setup_zebra_printer.sh
+chmod +x verify_printer.py
+
+# Download the application files from your repository
+echo "Downloading application files..."
+git clone https://github.com/Baanaaana/barcode-pi.git ./temp
+cp -r ./temp/barcode-pi/* .
+rm -rf ./temp
 
 # Create printer setup instructions
 echo "Creating printer setup instructions..."

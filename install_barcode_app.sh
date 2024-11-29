@@ -30,7 +30,9 @@ sudo apt-get install -y \
     python3-pil \
     python3-appdirs \
     python3-xmltodict \
-    python3-cups
+    python3-cups \
+    pyqt5-dev-tools \
+    qttools5-dev-tools
 
 # Remove old installation if exists
 echo "Cleaning up old installation..."
@@ -50,7 +52,7 @@ python3 -m venv ~/barcode_env --system-site-packages
 # Activate virtual environment and install additional packages
 echo "Installing additional Python packages..."
 source ~/barcode_env/bin/activate
-pip install python-barcode
+pip install python-barcode zebra-printer
 
 # Install CUPS driver for Zebra GK420D
 echo "Setting up CUPS for Zebra printer..."
@@ -81,6 +83,7 @@ source ~/barcode_env/bin/activate
 export DISPLAY=:0
 export PYTHONPATH=/home/pi/Desktop/AppV2:/usr/lib/python3/dist-packages
 export QT_QPA_PLATFORM=xcb
+pyuic5 -x neo_bar.ui -o neo_bar.py
 python3 YesBarcode.py
 EOL
 
@@ -92,6 +95,7 @@ source ~/barcode_env/bin/activate
 export DISPLAY=:0
 export PYTHONPATH=/home/pi/Desktop/AppV2:/usr/lib/python3/dist-packages
 export QT_QPA_PLATFORM=xcb
+pyuic5 -x neo_bar.ui -o neo_bar.py
 python3 YesBarcode.py
 EOL
 

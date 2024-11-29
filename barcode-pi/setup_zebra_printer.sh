@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "Setting up Zebra GK420D printer..."
+echo "Setting up Zebra ZD220 printer..."
 
 # Check if running as root
 if [ "$EUID" -ne 0 ]; then 
@@ -54,19 +54,19 @@ systemctl start cups
 # Wait for CUPS to fully start
 sleep 5
 
-# Add Zebra GK420D printer
-echo "Adding Zebra GK420D printer..."
-lpadmin -p ZebraGK420D \
+# Add Zebra ZD220 printer
+echo "Adding Zebra ZD220 printer..."
+lpadmin -p ZebraZD220 \
     -E \
-    -v usb://Zebra/GK420d \
+    -v usb://Zebra/ZD220 \
     -m raw \
     -o printer-is-shared=true
 
 # Set as default printer
-lpoptions -d ZebraGK420D
+lpoptions -d ZebraZD220
 
 # Configure default settings for 4x6 labels
-lpoptions -p ZebraGK420D -o media=w4h6.0 -o resolution=203dpi
+lpoptions -p ZebraZD220 -o media=w4h6.0 -o resolution=203dpi
 
 # Create test label
 cat > /tmp/test_label.zpl << EOF
@@ -81,17 +81,17 @@ EOF
 
 # Test print the barcode
 echo "Printing test barcode..."
-lp -d ZebraGK420D /tmp/test_label.zpl
+lp -d ZebraZD220 /tmp/test_label.zpl
 
 # Update the barcode application configuration
 if [ -f "/home/pi/barcode-pi/config.ini" ]; then
     echo "Updating barcode application configuration..."
-    sed -i 's/^printer_name=.*/printer_name=ZebraGK420D/' /home/pi/barcode-pi/config.ini
+    sed -i 's/^printer_name=.*/printer_name=ZebraZD220/' /home/pi/barcode-pi/config.ini
 else
     echo "Creating barcode application configuration..."
     cat > /home/pi/barcode-pi/config.ini << EOF
 [Printer]
-printer_name=ZebraGK420D
+printer_name=ZebraZD220
 auto_print=true
 copies=1
 EOF
@@ -102,5 +102,5 @@ chown pi:pi /home/pi/barcode-pi/config.ini
 
 echo "Printer setup complete!"
 echo "Test barcode has been sent to the printer"
-echo "The barcode application has been configured to use the Zebra GK420D printer"
-echo "You can check printer status by running: lpstat -p ZebraGK420D" 
+echo "The barcode application has been configured to use the Zebra ZD220 printer"
+echo "You can check printer status by running: lpstat -p ZebraZD220" 

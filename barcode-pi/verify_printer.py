@@ -8,16 +8,16 @@ def verify_printer():
     
     zebra_printer = None
     for printer in printers:
-        if printer == 'ZebraGK420D':
+        if printer == 'ZebraZD220':
             zebra_printer = printer
             break
     
     if zebra_printer:
-        print("✓ Zebra GK420D printer found and configured")
+        print("✓ Zebra ZD220 printer found and configured")
         print(f"Printer status: {printers[zebra_printer]['printer-state-message']}")
         return True
     else:
-        print("✗ Zebra GK420D printer not found")
+        print("✗ Zebra ZD220 printer not found")
         print("Available printers:", list(printers.keys()))
         return False
 

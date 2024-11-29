@@ -80,32 +80,24 @@ The system includes support for the Zebra GK420D label printer. To set up the pr
 
 1. Connect the Zebra GK420D printer to your Raspberry Pi via USB
 
-2. Download the setup scripts:
+2. After installing the barcode application, navigate to the application directory:
    ```bash
-   cd ~
-   wget https://raw.githubusercontent.com/Baanaaana/barcode-pi/main/barcode-pi/setup_zebra_printer.sh
-   wget https://raw.githubusercontent.com/Baanaaana/barcode-pi/main/barcode-pi/verify_printer.py
+   cd ~/barcode-pi
    ```
 
-3. Make the setup script executable:
-   ```bash
-   chmod +x setup_zebra_printer.sh
-   chmod +x verify_printer.py
-   ```
-
-4. Run the printer setup script:
+3. Run the printer setup script:
    ```bash
    sudo ./setup_zebra_printer.sh
    ```
 
-5. Verify the printer setup:
+4. Verify the printer setup:
    ```bash
    python3 verify_printer.py
    ```
 
-6. A test barcode will be printed automatically during setup
+A test barcode will be printed automatically during setup to confirm everything is working correctly.
 
-If the test print is successful, the barcode application will be automatically configured to use the Zebra GK420D printer.
+Note: The printer setup files are automatically installed and made executable during the main application installation. You don't need to download them separately.
 
 ## Uninstallation
 

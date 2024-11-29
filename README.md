@@ -22,9 +22,9 @@ A Python-based application for printing barcode labels using a Zebra GK420D prin
 ## Quick Installation
 
 Install the application with a single command:
-
+```
 curl -sSL https://raw.githubusercontent.com/Baanaaana/barcode-pi/main/install_barcode_app.sh | bash
-
+```
 This will:
 - Install all required dependencies
 - Set up the printer configuration
@@ -37,17 +37,17 @@ This will:
 If you prefer to review the installation script first:
 
 1. Download the installation script:
-
+```
 wget https://raw.githubusercontent.com/Baanaaana/barcode-pi/main/install_barcode_app.sh
-
+```
 2. Make it executable:
-
+```
 chmod +x install_barcode_app.sh
-
+```
 3. Run the script:
-
+```
 ./install_barcode_app.sh
-
+```
 ## Post-Installation
 
 After installation:

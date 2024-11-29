@@ -1,2 +1,7 @@
+#!/bin/bash
 sleep 10
-python3 /home/pi/Desktop/AppV2/YesBarcode.py
+cd /home/pi/Desktop/AppV2
+source ~/barcode_env/bin/activate
+export DISPLAY=:0
+export PYTHONPATH=/home/pi/Desktop/AppV2
+python3 YesBarcode.py

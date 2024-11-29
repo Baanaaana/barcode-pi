@@ -14,12 +14,14 @@ A Python-based application for printing barcode labels using a Zebra GK420D prin
 - Auto-print functionality
 - Multiple copies support
 
+
 ## Requirements
 
 - Raspberry Pi (tested on Raspberry Pi OS)
 - Zebra GK420D label printer
 - Internet connection for XML feed
 - Display for GUI interface
+
 
 ## Quick Installation
 
@@ -33,6 +35,7 @@ This will:
 - Create desktop shortcuts
 - Configure autostart at boot
 - Set up the application environment
+
 
 ## Manual Installation
 
@@ -50,6 +53,8 @@ chmod +x install_barcode_app.sh
 ```
 ./install_barcode_app.sh
 ```
+
+
 ## Post-Installation
 
 After installation:
@@ -57,6 +62,7 @@ After installation:
 2. You can find a desktop shortcut to launch the app manually
 3. Configure your XML feed URL in the application interface
 4. Select your Zebra printer from the dropdown menu
+
 
 ## Configuration
 
@@ -66,6 +72,7 @@ The application can be configured through the GUI:
 - Auto-print toggle
 - Number of copies
 
+
 ## XML Feed URL
 
 To set the XML feed URL via SSH:
@@ -73,6 +80,7 @@ To set the XML feed URL via SSH:
 ```
 python3 /home/pi/barcode-pi/set_url.py "XML_FEED_URL"
 ```
+
 
 ## Printer Setup
 
@@ -99,6 +107,7 @@ A test barcode will be printed automatically during setup to confirm everything 
 
 Note: The printer setup files are automatically installed and made executable during the main application installation. You don't need to download them separately.
 
+
 ## Uninstallation
 
 To uninstall the application:
@@ -112,6 +121,7 @@ rm -rf ~/barcode_env && \
 rm -f ~/Desktop/BarcodeApp.desktop && \
 rm -f ~/.config/autostart/barcode_printer.desktop
 ```
+
 ## Troubleshooting
 
 If you encounter any issues:
@@ -119,6 +129,7 @@ If you encounter any issues:
 2. Check that CUPS service is running ("sudo systemctl status cups")
 3. Verify your internet connection for XML feed access
 4. Check application logs for errors
+
 
 ## Support
 

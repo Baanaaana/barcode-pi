@@ -17,11 +17,27 @@ sudo apt-get install -y \
     python3-pip \
     python3-pyqt5 \
     python3-pyqt5.qtsvg \
+    python3-pyqt5.qtwidgets \
     libcups2-dev \
     git \
     wget \
     fonts-freefont-ttf \
-    python3-venv
+    python3-venv \
+    python3-dev \
+    build-essential \
+    python3-wheel \
+    python3-setuptools
+
+# Remove old installation if exists
+echo "Cleaning up old installation..."
+sudo systemctl stop barcode-printer.service 2>/dev/null || true
+sudo systemctl disable barcode-printer.service 2>/dev/null || true
+sudo rm -f /etc/systemd/system/barcode-printer.service
+sudo systemctl daemon-reload
+rm -rf ~/Desktop/AppV2
+rm -rf ~/barcode_env
+rm -f ~/Desktop/BarcodeApp.desktop
+rm -f ~/.config/autostart/barcode_printer.desktop
 
 # Create virtual environment
 echo "Creating Python virtual environment..."
@@ -30,13 +46,15 @@ python3 -m venv ~/barcode_env
 # Activate virtual environment and install Python packages
 echo "Installing Python packages in virtual environment..."
 source ~/barcode_env/bin/activate
+pip install --upgrade pip wheel setuptools
 pip install \
     requests \
     python-barcode \
     pycups \
     pillow \
     appdirs \
-    xmltodict
+    xmltodict \
+    PyQt5
 
 # Install CUPS driver for Zebra GK420D
 echo "Setting up CUPS for Zebra printer..."
@@ -55,24 +73,31 @@ git clone https://github.com/Baanaaana/barcode-pi.git .
 mv AppV2/* .
 rm -rf AppV2
 
-# Update run scripts to use virtual environment
+# Create required directories and files
+mkdir -p ~/.config/autostart
+
+# Update run scripts
 echo "Updating run scripts..."
 cat > ~/Desktop/AppV2/run.sh << EOL
 #!/bin/bash
+cd /home/pi/Desktop/AppV2
 source ~/barcode_env/bin/activate
-python3 /home/pi/Desktop/AppV2/YesBarcode.py
+export DISPLAY=:0
+export PYTHONPATH=/home/pi/Desktop/AppV2
+export QT_QPA_PLATFORM=xcb
+python3 YesBarcode.py
 EOL
 
 cat > ~/Desktop/AppV2/run-sleep.sh << EOL
 #!/bin/bash
 sleep 10
+cd /home/pi/Desktop/AppV2
 source ~/barcode_env/bin/activate
-python3 /home/pi/Desktop/AppV2/YesBarcode.py
+export DISPLAY=:0
+export PYTHONPATH=/home/pi/Desktop/AppV2
+export QT_QPA_PLATFORM=xcb
+python3 YesBarcode.py
 EOL
-
-# Set up autostart directory
-echo "Setting up autostart..."
-mkdir -p ~/.config/autostart
 
 # Create autostart entry
 echo "Creating autostart entry..."
@@ -80,7 +105,7 @@ cat > ~/.config/autostart/barcode_printer.desktop << EOL
 [Desktop Entry]
 Type=Application
 Name=Barcode Printer
-Exec=bash /home/pi/Desktop/AppV2/run-sleep.sh
+Exec=/bin/bash /home/pi/Desktop/AppV2/run-sleep.sh
 Hidden=false
 NoDisplay=false
 X-GNOME-Autostart-enabled=true
@@ -94,14 +119,14 @@ Version=1.0
 Type=Application
 Name=Barcode App
 Comment=Start Barcode Label Printer
-Exec=bash /home/pi/Desktop/AppV2/run.sh
+Exec=/bin/bash /home/pi/Desktop/AppV2/run.sh
 Icon=/home/pi/Desktop/AppV2/icon.ico
 Terminal=false
 Categories=Utility;
 EOL
 
-# Create systemd service for boot startup
-echo "Creating systemd service for boot startup..."
+# Create systemd service
+echo "Creating systemd service..."
 sudo tee /etc/systemd/system/barcode-printer.service << EOL
 [Unit]
 Description=Barcode Printer Application
@@ -112,18 +137,15 @@ Type=simple
 User=pi
 Environment=DISPLAY=:0
 Environment=XAUTHORITY=/home/pi/.Xauthority
-ExecStart=/bin/bash -c 'source ~/barcode_env/bin/activate && /home/pi/Desktop/AppV2/run-sleep.sh'
+Environment=QT_QPA_PLATFORM=xcb
+WorkingDirectory=/home/pi/Desktop/AppV2
+ExecStart=/bin/bash -c 'source ~/barcode_env/bin/activate && exec /home/pi/Desktop/AppV2/run-sleep.sh'
 Restart=always
 RestartSec=3
 
 [Install]
 WantedBy=multi-user.target
 EOL
-
-# Enable and start the service
-echo "Enabling barcode printer service..."
-sudo systemctl enable barcode-printer.service
-sudo systemctl start barcode-printer.service
 
 # Set permissions
 echo "Setting permissions..."
@@ -132,6 +154,14 @@ chmod +x ~/Desktop/BarcodeApp.desktop
 chmod +x ~/Desktop/AppV2/run.sh
 chmod +x ~/Desktop/AppV2/run-sleep.sh
 chmod +x ~/Desktop/AppV2/YesBarcode.py
+
+# Set desktop file as trusted
+gio set ~/Desktop/BarcodeApp.desktop "metadata::trusted" yes
+
+# Enable and start the service
+echo "Enabling and starting barcode printer service..."
+sudo systemctl enable barcode-printer.service
+sudo systemctl start barcode-printer.service
 
 echo "Installation completed!"
 echo "Please ensure your Zebra GK420D printer is connected and powered on."

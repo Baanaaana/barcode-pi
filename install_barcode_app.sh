@@ -17,7 +17,6 @@ sudo apt-get install -y \
     python3-pip \
     python3-pyqt5 \
     python3-pyqt5.qtsvg \
-    python3-pyqt5.qtwidgets \
     libcups2-dev \
     git \
     wget \

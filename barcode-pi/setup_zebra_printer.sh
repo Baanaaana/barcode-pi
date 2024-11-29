@@ -134,6 +134,21 @@ chown pi:pi /home/pi/barcode-pi/config.ini
 systemctl restart cups
 sleep 5
 
+# Restart the barcode application
+echo "Restarting barcode application..."
+if systemctl is-active --quiet barcode-printer.service; then
+    systemctl restart barcode-printer.service
+    echo "Barcode application service restarted"
+else
+    # If service isn't running, try to find and restart the GUI application
+    if pgrep -f "python3 YesBarcode.py" > /dev/null; then
+        pkill -f "python3 YesBarcode.py"
+        # Start the application again as the pi user
+        sudo -u pi bash -c 'cd /home/pi/barcode-pi && ./run.sh &'
+        echo "Barcode application GUI restarted"
+    fi
+fi
+
 echo "Printer setup complete!"
 echo "Test barcode has been sent to the printer"
 echo "The barcode application has been configured to use the Zebra ZD220 printer"

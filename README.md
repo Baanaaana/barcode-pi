@@ -34,30 +34,11 @@ This will:
 - Set up the application environment
 
 
-## Manual Installation
-If you prefer to review the installation script first:
-
-1. Download the installation script:
-```bash
-wget https://raw.githubusercontent.com/Baanaaana/barcode-pi/main/install_barcode_app.sh
-```
-
-2. Make it executable:
-```bash
-chmod +x install_barcode_app.sh
-```
-
-3. Run the script:
-```bash
-./install_barcode_app.sh
-```
-
-
 ## Post-Installation
 After installation:
 1. The application will start automatically after system boot
 2. You can find a desktop shortcut to launch the app manually
-3. Configure your XML feed URL in the application interface
+3. Configure your XML feed URL in the application interface or via SSH
 4. Select your Zebra printer from the dropdown menu
 
 

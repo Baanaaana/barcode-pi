@@ -19,59 +19,23 @@ if ! wget "$PRINTNODE_URL" -O printnode.tar.gz; then
 else
     # Extract and install the package
     echo "Extracting PrintNode..."
-    tar xzf printnode.tar.gz
-    cd PrintNode-*
+    tar xf printnode.tar.gz
     
-    # Install PrintNode
-    if ./install; then
-        cd ..
-        # Clean up downloaded files
-        rm -rf printnode.tar.gz PrintNode-*
-        
-        # Configure PrintNode
-        echo "Configuring PrintNode..."
-        if [ ! -z "$PRINTER_URI" ]; then
-            # Start PrintNode service
-            systemctl enable printnode-client
-            systemctl start printnode-client
-            
-            # Prompt for PrintNode API key
-            echo -e "\nPlease enter your PrintNode API key (get it from https://www.printnode.com):"
-            read -r API_KEY
-            
-            if [ ! -z "$API_KEY" ]; then
-                echo "Configuring PrintNode with API key..."
-                printnode-config --apikey="$API_KEY"
-                
-                echo "Setting up PrintNode with detected printer: $PRINTER_URI"
-                # Configure PrintNode to use the same printer
-                lpadmin -p ZebraZD220_PrintNode \
-                    -E \
-                    -v "$PRINTER_URI" \
-                    -m raw \
-                    -o printer-is-shared=true \
-                    -o printer-error-policy=abort-job
-
-                # Configure specific settings for ZD220 PrintNode
-                lpoptions -p ZebraZD220_PrintNode \
-                    -o Resolution=203dpi \
-                    -o media=w4h6.0
-
-                # Show PrintNode status
-                echo "PrintNode installation status:"
-                systemctl status printnode-client --no-pager
-            else
-                echo "No API key provided - PrintNode configuration skipped"
-            fi
-        else
-            echo "Warning: Cannot configure PrintNode - no printer URI available"
-        fi
-    else
-        echo "Error: Failed to install PrintNode client"
-        echo "Continuing with printer setup without PrintNode..."
-        cd ..
-        rm -rf printnode.tar.gz PrintNode-*
-    fi
+    # Get the extracted directory name
+    PRINTNODE_DIR=$(ls -d PrintNode-*)
+    
+    echo -e "\nPrintNode has been extracted to: $PRINTNODE_DIR"
+    echo "To complete PrintNode setup:"
+    echo "1. After this script finishes, navigate to the directory:"
+    echo "   cd ~/barcode-pi/$PRINTNODE_DIR"
+    echo "2. Run PrintNode:"
+    echo "   ./PrintNode"
+    echo "3. Sign in with your PrintNode credentials when prompted"
+    echo -e "\nContinuing with printer setup...\n"
+    
+    # Move PrintNode directory to the application directory for future use
+    mv "$PRINTNODE_DIR" ~/barcode-pi/
+    rm printnode.tar.gz
 fi
 
 # Install required packages

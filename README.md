@@ -105,15 +105,23 @@ systemctl status printnode-client
 
 
 ## PrintNode Setup
-The application includes PrintNode for remote printing capabilities. During printer setup you will be prompted for your API key.
+The application includes PrintNode for remote printing capabilities. To set up PrintNode:
 
-If you need to configure PrintNode later:
-
-1. Get your PrintNode API key from https://www.printnode.com/
-2. Run the printer setup script again:
+1. After running the printer setup script, navigate to the PrintNode directory:
 ```bash
-cd ~/barcode-pi && sudo ./setup_zebra_printer.sh
+cd ~/barcode-pi/PrintNode-*
 ```
+
+2. Run PrintNode:
+```bash
+./PrintNode
+```
+
+3. When prompted, sign in with your PrintNode credentials
+
+Note: You can get a PrintNode account from https://www.printnode.com/
+
+The printer setup script will automatically download and extract PrintNode. You'll need to complete the login step manually to ensure proper authentication.
 
 
 ## Uninstallation

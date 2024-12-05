@@ -6,7 +6,7 @@ A Python-based application for printing barcode labels using a Zebra ZD220 print
 ## Features
 - Compatible with Zebra ZD220 label printer
 - XML feed integration for product data
-- PrintNode integration for remote printing
+- PrintNode integration for remote printing capabilities
 - User-friendly GUI interface
 - Automatic startup on boot
 - Desktop shortcut for manual launch
@@ -19,6 +19,7 @@ A Python-based application for printing barcode labels using a Zebra ZD220 print
 - Zebra ZD220 label printer
 - Internet connection for XML feed
 - Display for GUI interface
+- PrintNode account (for remote printing)
 
 
 ## Quick Installation
@@ -33,6 +34,7 @@ This will:
 - Create desktop shortcuts
 - Configure autostart at boot
 - Set up the application environment
+- Install PrintNode client
 
 
 ## Post-Installation
@@ -68,6 +70,10 @@ The system includes support for the Zebra ZD220 label printer. To set up the pri
 cd ~/barcode-pi && sudo ./setup_zebra_printer.sh && python3 verify_printer.py
 ```
 
+During setup, you will be prompted to enter your PrintNode API key. You can:
+- Enter your API key to enable remote printing
+- Press Enter to skip PrintNode configuration
+
 A test barcode will be printed automatically during setup to confirm everything is working correctly.
 
 Note: The printer is configured to use the raw printer driver, which allows direct ZPL commands to be sent to the printer. This is the recommended setup for Zebra label printers on Linux systems.
@@ -92,19 +98,21 @@ systemctl status cups
 lpstat -p ZebraZD220
 ```
 
-
-## PrintNode Setup
-The application includes PrintNode for remote printing capabilities. After installation:
-
-1. Get your PrintNode API key from https://www.printnode.com/
-2. Configure PrintNode:
+5. Check PrintNode status:
 ```bash
-sudo printnode-config --apikey="YOUR_API_KEY"
+systemctl status printnode-client
 ```
 
-3. Verify PrintNode status:
+
+## PrintNode Setup
+The application includes PrintNode for remote printing capabilities. During printer setup you will be prompted for your API key.
+
+If you need to configure PrintNode later:
+
+1. Get your PrintNode API key from https://www.printnode.com/
+2. Run the printer setup script again:
 ```bash
-sudo systemctl status printnode-client
+cd ~/barcode-pi && sudo ./setup_zebra_printer.sh
 ```
 
 
@@ -128,6 +136,7 @@ If you encounter any issues:
 2. Check that CUPS service is running (`sudo systemctl status cups`)
 3. Verify your internet connection for XML feed access
 4. Check application logs for errors
+5. Verify PrintNode status (`systemctl status printnode-client`)
 
 
 ## Support

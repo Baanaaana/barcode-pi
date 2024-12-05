@@ -11,15 +11,68 @@ fi
 # Install PrintNode
 echo "Installing PrintNode..."
 # Download PrintNode client
-wget https://dl.printnode.com/client/printnode-client-latest.deb
+PRINTNODE_URL="https://dl.printnode.com/client/PrintNode-4.28.3-pi-bookworm-aarch64.tar.gz"
+if ! wget "$PRINTNODE_URL" -O printnode.tar.gz; then
+    echo "Error: Failed to download PrintNode client"
+    echo "Please check if the URL is accessible: $PRINTNODE_URL"
+    echo "Continuing with printer setup without PrintNode..."
+else
+    # Extract and install the package
+    echo "Extracting PrintNode..."
+    tar xzf printnode.tar.gz
+    cd PrintNode-*
+    
+    # Install PrintNode
+    if ./install; then
+        cd ..
+        # Clean up downloaded files
+        rm -rf printnode.tar.gz PrintNode-*
+        
+        # Configure PrintNode
+        echo "Configuring PrintNode..."
+        if [ ! -z "$PRINTER_URI" ]; then
+            # Start PrintNode service
+            systemctl enable printnode-client
+            systemctl start printnode-client
+            
+            # Prompt for PrintNode API key
+            echo -e "\nPlease enter your PrintNode API key (get it from https://www.printnode.com):"
+            read -r API_KEY
+            
+            if [ ! -z "$API_KEY" ]; then
+                echo "Configuring PrintNode with API key..."
+                printnode-config --apikey="$API_KEY"
+                
+                echo "Setting up PrintNode with detected printer: $PRINTER_URI"
+                # Configure PrintNode to use the same printer
+                lpadmin -p ZebraZD220_PrintNode \
+                    -E \
+                    -v "$PRINTER_URI" \
+                    -m raw \
+                    -o printer-is-shared=true \
+                    -o printer-error-policy=abort-job
 
-# Install the package
-dpkg -i printnode-client-latest.deb
-# Fix any dependency issues
-apt-get install -f -y
+                # Configure specific settings for ZD220 PrintNode
+                lpoptions -p ZebraZD220_PrintNode \
+                    -o Resolution=203dpi \
+                    -o media=w4h6.0
 
-# Clean up downloaded file
-rm printnode-client-latest.deb
+                # Show PrintNode status
+                echo "PrintNode installation status:"
+                systemctl status printnode-client --no-pager
+            else
+                echo "No API key provided - PrintNode configuration skipped"
+            fi
+        else
+            echo "Warning: Cannot configure PrintNode - no printer URI available"
+        fi
+    else
+        echo "Error: Failed to install PrintNode client"
+        echo "Continuing with printer setup without PrintNode..."
+        cd ..
+        rm -rf printnode.tar.gz PrintNode-*
+    fi
+fi
 
 # Install required packages
 echo "Installing required packages..."
@@ -160,45 +213,6 @@ else
         sudo -u pi bash -c 'cd /home/pi/barcode-pi && ./run.sh &'
         echo "Barcode application GUI restarted"
     fi
-fi
-
-# Configure PrintNode with the same printer
-echo "Configuring PrintNode..."
-if [ ! -z "$PRINTER_URI" ]; then
-    # Start PrintNode service
-    systemctl enable printnode-client
-    systemctl start printnode-client
-    
-    # Prompt for PrintNode API key
-    echo -e "\nPlease enter your PrintNode API key (get it from https://www.printnode.com):"
-    read -r API_KEY
-    
-    if [ ! -z "$API_KEY" ]; then
-        echo "Configuring PrintNode with API key..."
-        printnode-config --apikey="$API_KEY"
-        
-        echo "Setting up PrintNode with detected printer: $PRINTER_URI"
-        # Configure PrintNode to use the same printer
-        lpadmin -p ZebraZD220_PrintNode \
-            -E \
-            -v "$PRINTER_URI" \
-            -m raw \
-            -o printer-is-shared=true \
-            -o printer-error-policy=abort-job
-
-        # Configure specific settings for ZD220 PrintNode
-        lpoptions -p ZebraZD220_PrintNode \
-            -o Resolution=203dpi \
-            -o media=w4h6.0
-
-        # Show PrintNode status
-        echo "PrintNode installation status:"
-        systemctl status printnode-client --no-pager
-    else
-        echo "No API key provided - PrintNode configuration skipped"
-    fi
-else
-    echo "Warning: Cannot configure PrintNode - no printer URI available"
 fi
 
 echo "Printer setup complete!"

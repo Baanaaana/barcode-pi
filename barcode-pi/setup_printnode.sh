@@ -23,6 +23,17 @@ tar xf printnode.tar.gz
 # Get the extracted directory name
 PRINTNODE_DIR=$(ls -d PrintNode-*)
 
+# Create directory if it doesn't exist
+mkdir -p /home/pi/barcode-pi
+
+# Move PrintNode directory to the application directory
+echo "Moving PrintNode to application directory..."
+mv "$PRINTNODE_DIR" /home/pi/barcode-pi/
+chown -R pi:pi /home/pi/barcode-pi/"$PRINTNODE_DIR"
+
+# Clean up
+rm printnode.tar.gz
+
 echo -e "\nPrintNode has been extracted to: $PRINTNODE_DIR"
 echo "To complete PrintNode setup:"
 echo "1. After this script finishes, navigate to the directory:"
@@ -30,9 +41,5 @@ echo "   cd ~/barcode-pi/$PRINTNODE_DIR"
 echo "2. Run PrintNode:"
 echo "   ./PrintNode"
 echo "3. Sign in with your PrintNode credentials when prompted"
-
-# Move PrintNode directory to the application directory for future use
-mv "$PRINTNODE_DIR" ~/barcode-pi/
-rm printnode.tar.gz
 
 echo "PrintNode setup complete!" 

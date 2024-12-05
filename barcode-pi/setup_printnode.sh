@@ -29,31 +29,6 @@ chown -R pi:pi /home/pi/printnode
 # Clean up
 rm printnode.tar.gz
 
-# Create systemd service for PrintNode
-echo "Creating PrintNode service..."
-cat > /etc/systemd/system/printnode.service << EOF
-[Unit]
-Description=PrintNode Client Service
-After=network.target cups.service
-Wants=cups.service
-
-[Service]
-Type=simple
-User=pi
-ExecStart=/home/pi/printnode/PrintNode --headless
-Restart=always
-RestartSec=3
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-# Enable and start PrintNode service
-echo "Enabling and starting PrintNode service..."
-systemctl daemon-reload
-systemctl enable printnode.service
-systemctl start printnode.service
-
 # Create desktop shortcut for PrintNode
 echo "Creating PrintNode desktop shortcut..."
 cat > /home/pi/Desktop/PrintNode.desktop << EOF
@@ -73,11 +48,12 @@ chown pi:pi /home/pi/Desktop/PrintNode.desktop
 
 echo -e "\nPrintNode has been installed to: /home/pi/printnode"
 echo "To complete PrintNode setup:"
-echo "1. After this script finishes, navigate to the directory:"
-echo "   cd ~/printnode"
-echo "2. Run PrintNode:"
-echo "   ./PrintNode"
-echo "3. Sign in with your PrintNode credentials when prompted"
-echo "4. You can also start PrintNode using the desktop shortcut"
+echo "1. Double-click the PrintNode icon on your desktop"
+echo "2. Sign in with your PrintNode credentials"
+echo "3. Configure your PrintNode settings"
+echo "4. Close PrintNode when configuration is complete"
+echo "5. Run the following command to enable PrintNode service:"
+echo "   sudo ./setup_printnode_service.sh"
+echo "6. You can always start PrintNode GUI using the desktop shortcut"
 
 echo "PrintNode setup complete!" 

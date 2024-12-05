@@ -137,6 +137,20 @@ cd ~/printnode
 
 4. When prompted, sign in with your PrintNode credentials
 
+5. Configure your PrintNode settings and close the application
+
+6. Enable the PrintNode service:
+```bash
+sudo ./setup_printnode_service.sh
+```
+
+To start/stop/restart the PrintNode service:
+```bash
+sudo systemctl start printnode    # Start the service
+sudo systemctl stop printnode     # Stop the service
+sudo systemctl restart printnode  # Restart the service
+```
+
 After setup, you can start PrintNode:
 - Using the desktop shortcut (GUI mode)
 - Or by running PrintNode from the terminal

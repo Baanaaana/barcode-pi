@@ -84,8 +84,14 @@ systemctl start cups
 # Wait for CUPS to fully start
 sleep 5
 
-# Remove existing printer if it exists
-lpadmin -x ZebraZD220 2>/dev/null || true
+# Remove all existing printers
+echo "Removing all existing printers..."
+while IFS= read -r printer; do
+    if [ ! -z "$printer" ]; then
+        echo "Removing printer: $printer"
+        lpadmin -x "$printer"
+    fi
+done < <(lpstat -p | cut -d' ' -f2)
 
 # Detect USB printer
 echo "Detecting Zebra printer..."

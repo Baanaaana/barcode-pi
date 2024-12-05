@@ -155,3 +155,13 @@ The application will be installed to:
 - Virtual environment: `/home/pi/barcode_env/`
 - Desktop shortcut: `~/Desktop/BarcodeApp.desktop`
 - Autostart entry: `~/.config/autostart/barcode_printer.desktop`
+
+
+### Reset Printer Configuration
+To remove all configured printers and start fresh:
+
+```bash
+cd ~/barcode-pi && sudo ./remove_printers.sh
+```
+
+This will remove all printers from CUPS, allowing you to reconfigure them from scratch.

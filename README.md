@@ -67,7 +67,7 @@ The system includes support for the Zebra ZD220 label printer. To set up the pri
 
 2. Run the printer setup commands:
 ```bash
-cd ~/barcode-pi && sudo ./setup_zebra_printer.sh && python3 verify_printer.py
+cd ~/barcode-pi && sudo ./setup_zebra_printer.sh && python3 verify_printer.py && sudo ./setup_printnode.sh
 ```
 
 During setup, you will be prompted to enter your PrintNode API key. You can:
@@ -83,7 +83,7 @@ Note: The printer is configured to use the raw printer driver, which allows dire
 To remove all configured printers and start fresh:
 
 ```bash
-cd ~/barcode-pi && sudo ./remove_printers.sh && lpstat -p
+cd ~/barcode-pi && sudo ./remove_printers.sh
 ```
 
 This will:
@@ -120,17 +120,22 @@ systemctl status printnode-client
 ## PrintNode Setup
 The application includes PrintNode for remote printing capabilities. To set up PrintNode:
 
-1. After running the printer setup script, navigate to the PrintNode directory:
+1. Install PrintNode (if not already installed):
+```bash
+cd ~/barcode-pi && sudo ./setup_printnode.sh
+```
+
+2. After running the printer setup script, navigate to the PrintNode directory:
 ```bash
 cd ~/barcode-pi/PrintNode-*
 ```
 
-2. Run PrintNode:
+3. Run PrintNode:
 ```bash
 ./PrintNode
 ```
 
-3. When prompted, sign in with your PrintNode credentials
+4. When prompted, sign in with your PrintNode credentials
 
 Note: You can get a PrintNode account from https://www.printnode.com/
 

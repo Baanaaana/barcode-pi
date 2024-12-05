@@ -20,19 +20,39 @@ fi
 echo "Extracting PrintNode..."
 tar xf printnode.tar.gz
 
-# Get the extracted directory name
+# Get the extracted directory name and rename to simple 'printnode'
 PRINTNODE_DIR=$(ls -d PrintNode-*)
-
-# Create directory if it doesn't exist
-mkdir -p /home/pi/barcode-pi
-
-# Move PrintNode directory to the application directory
-echo "Moving PrintNode to application directory..."
-mv "$PRINTNODE_DIR" /home/pi/barcode-pi/
-chown -R pi:pi /home/pi/barcode-pi/"$PRINTNODE_DIR"
+rm -rf /home/pi/printnode
+mv "$PRINTNODE_DIR" /home/pi/printnode
+chown -R pi:pi /home/pi/printnode
 
 # Clean up
 rm printnode.tar.gz
+
+# Create systemd service for PrintNode
+echo "Creating PrintNode service..."
+cat > /etc/systemd/system/printnode.service << EOF
+[Unit]
+Description=PrintNode Client Service
+After=network.target cups.service
+Wants=cups.service
+
+[Service]
+Type=simple
+User=pi
+ExecStart=/home/pi/printnode/PrintNode --headless
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# Enable and start PrintNode service
+echo "Enabling and starting PrintNode service..."
+systemctl daemon-reload
+systemctl enable printnode.service
+systemctl start printnode.service
 
 # Create desktop shortcut for PrintNode
 echo "Creating PrintNode desktop shortcut..."
@@ -40,7 +60,7 @@ cat > /home/pi/Desktop/PrintNode.desktop << EOF
 [Desktop Entry]
 Type=Application
 Name=PrintNode
-Exec=/home/pi/barcode-pi/$PRINTNODE_DIR/PrintNode
+Exec=/home/pi/printnode/PrintNode
 Icon=printer
 Terminal=false
 Categories=Utility;
@@ -51,10 +71,10 @@ EOF
 chmod +x /home/pi/Desktop/PrintNode.desktop
 chown pi:pi /home/pi/Desktop/PrintNode.desktop
 
-echo -e "\nPrintNode has been extracted to: $PRINTNODE_DIR"
+echo -e "\nPrintNode has been installed to: /home/pi/printnode"
 echo "To complete PrintNode setup:"
 echo "1. After this script finishes, navigate to the directory:"
-echo "   cd ~/barcode-pi/$PRINTNODE_DIR"
+echo "   cd ~/printnode"
 echo "2. Run PrintNode:"
 echo "   ./PrintNode"
 echo "3. Sign in with your PrintNode credentials when prompted"

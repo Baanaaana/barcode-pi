@@ -127,7 +127,7 @@ cd ~/barcode-pi && sudo ./setup_printnode.sh
 
 2. After running the printer setup script, navigate to the PrintNode directory:
 ```bash
-cd ~/barcode-pi/PrintNode-*
+cd ~/printnode
 ```
 
 3. Run PrintNode:
@@ -138,10 +138,16 @@ cd ~/barcode-pi/PrintNode-*
 4. When prompted, sign in with your PrintNode credentials
 
 After setup, you can start PrintNode:
-- Using the desktop shortcut
+- Using the desktop shortcut (GUI mode)
 - Or by running PrintNode from the terminal
+- PrintNode will also start automatically at boot in headless mode
 
 Note: You can get a PrintNode account from https://www.printnode.com/
+
+To check PrintNode service status:
+```bash
+sudo systemctl status printnode
+```
 
 The printer setup script will automatically download and extract PrintNode. You'll need to complete the login step manually to ensure proper authentication.
 

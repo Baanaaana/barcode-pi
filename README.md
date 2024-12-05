@@ -92,31 +92,6 @@ This will:
 - Allow you to reconfigure them from scratch
 
 
-### Troubleshooting Printer Setup
-If you encounter issues with the printer:
-
-1. Ensure the printer is properly connected via USB and powered on
-2. Check the USB connection:
-```bash
-lsusb | grep Zebra
-```
-
-3. Verify CUPS is running:
-```bash
-systemctl status cups
-```
-
-4. Check printer status:
-```bash
-lpstat -p ZebraZD220
-```
-
-5. Check PrintNode status:
-```bash
-systemctl status printnode-client
-```
-
-
 ## PrintNode Setup
 The application includes PrintNode for remote printing capabilities. To set up PrintNode:
 
@@ -125,19 +100,13 @@ The application includes PrintNode for remote printing capabilities. To set up P
 cd ~/barcode-pi && sudo ./setup_printnode.sh
 ```
 
-2. After running the printer setup script, navigate to the PrintNode directory:
-```bash
-cd ~/printnode
-```
+2. Double-click the PrintNode icon on your desktop
 
-3. Run PrintNode:
-```bash
-./PrintNode
-```
+3. Sign in with your PrintNode credentials
 
-4. When prompted, sign in with your PrintNode credentials
+4. Configure your PrintNode settings
 
-5. Configure your PrintNode settings and close the application
+5. Close PrintNode when configuration is complete
 
 6. Enable the PrintNode service:
 ```bash
@@ -152,8 +121,7 @@ sudo systemctl restart printnode  # Restart the service
 ```
 
 After setup, you can start PrintNode:
-- Using the desktop shortcut (GUI mode)
-- Or by running PrintNode from the terminal
+- You can always start PrintNode GUI using the desktop shortcut
 - PrintNode will also start automatically at boot in headless mode
 
 Note: You can get a PrintNode account from https://www.printnode.com/

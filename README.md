@@ -67,12 +67,8 @@ The system includes support for the Zebra ZD220 label printer. To set up the pri
 
 2. Run the printer setup commands:
 ```bash
-cd ~/barcode-pi && sudo ./setup_zebra_printer.sh && python3 verify_printer.py && sudo ./setup_printnode.sh
+cd ~/barcode-pi && sudo ./setup_zebra_printer.sh && python3 verify_printer.py
 ```
-
-During setup, you will be prompted to enter your PrintNode API key. You can:
-- Enter your API key to enable remote printing
-- Press Enter to skip PrintNode configuration
 
 A test barcode will be printed automatically during setup to confirm everything is working correctly.
 

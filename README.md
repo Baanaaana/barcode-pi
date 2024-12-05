@@ -83,10 +83,13 @@ Note: The printer is configured to use the raw printer driver, which allows dire
 To remove all configured printers and start fresh:
 
 ```bash
-cd ~/barcode-pi && sudo ./remove_printers.sh
+cd ~/barcode-pi && sudo ./remove_printers.sh && lpstat -p
 ```
 
-This will remove all printers from CUPS, allowing you to reconfigure them from scratch.
+This will:
+- Remove all printers from CUPS
+- Show you the current printer list (should be empty)
+- Allow you to reconfigure them from scratch
 
 
 ### Troubleshooting Printer Setup

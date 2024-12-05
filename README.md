@@ -79,6 +79,16 @@ A test barcode will be printed automatically during setup to confirm everything 
 Note: The printer is configured to use the raw printer driver, which allows direct ZPL commands to be sent to the printer. This is the recommended setup for Zebra label printers on Linux systems.
 
 
+### Reset Printer Configuration
+To remove all configured printers and start fresh:
+
+```bash
+cd ~/barcode-pi && sudo ./remove_printers.sh
+```
+
+This will remove all printers from CUPS, allowing you to reconfigure them from scratch.
+
+
 ### Troubleshooting Printer Setup
 If you encounter issues with the printer:
 
@@ -155,13 +165,3 @@ The application will be installed to:
 - Virtual environment: `/home/pi/barcode_env/`
 - Desktop shortcut: `~/Desktop/BarcodeApp.desktop`
 - Autostart entry: `~/.config/autostart/barcode_printer.desktop`
-
-
-### Reset Printer Configuration
-To remove all configured printers and start fresh:
-
-```bash
-cd ~/barcode-pi && sudo ./remove_printers.sh
-```
-
-This will remove all printers from CUPS, allowing you to reconfigure them from scratch.

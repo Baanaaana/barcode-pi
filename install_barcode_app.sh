@@ -242,10 +242,6 @@ if __name__ == "__main__":
     sys.exit(0 if success else 1)
 EOL
 
-# Make printer setup files executable
-chmod +x setup_zebra_printer.sh
-chmod +x verify_printer.py
-
 # Download the application files from your repository
 echo "Downloading application files..."
 git clone https://github.com/Baanaaana/barcode-pi.git ./temp
@@ -331,6 +327,7 @@ chmod +x ~/barcode-pi/YesBarcode.py
 chmod +x ~/barcode-pi/set_url.py
 chmod +x ~/barcode-pi/setup_zebra_printer.sh
 chmod +x ~/barcode-pi/verify_printer.py
+chmod +x ~/barcode-pi/remove_printers.sh
 
 echo "Installation complete!"
 echo "The application will start automatically on next boot"

@@ -137,6 +137,10 @@ cd ~/barcode-pi/PrintNode-*
 
 4. When prompted, sign in with your PrintNode credentials
 
+After setup, you can start PrintNode:
+- Using the desktop shortcut
+- Or by running PrintNode from the terminal
+
 Note: You can get a PrintNode account from https://www.printnode.com/
 
 The printer setup script will automatically download and extract PrintNode. You'll need to complete the login step manually to ensure proper authentication.

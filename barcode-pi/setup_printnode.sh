@@ -34,6 +34,23 @@ chown -R pi:pi /home/pi/barcode-pi/"$PRINTNODE_DIR"
 # Clean up
 rm printnode.tar.gz
 
+# Create desktop shortcut for PrintNode
+echo "Creating PrintNode desktop shortcut..."
+cat > /home/pi/Desktop/PrintNode.desktop << EOF
+[Desktop Entry]
+Type=Application
+Name=PrintNode
+Exec=/home/pi/barcode-pi/$PRINTNODE_DIR/PrintNode
+Icon=printer
+Terminal=false
+Categories=Utility;
+Comment=PrintNode Remote Printing Client
+EOF
+
+# Set correct permissions for the shortcut
+chmod +x /home/pi/Desktop/PrintNode.desktop
+chown pi:pi /home/pi/Desktop/PrintNode.desktop
+
 echo -e "\nPrintNode has been extracted to: $PRINTNODE_DIR"
 echo "To complete PrintNode setup:"
 echo "1. After this script finishes, navigate to the directory:"
@@ -41,5 +58,6 @@ echo "   cd ~/barcode-pi/$PRINTNODE_DIR"
 echo "2. Run PrintNode:"
 echo "   ./PrintNode"
 echo "3. Sign in with your PrintNode credentials when prompted"
+echo "4. You can also start PrintNode using the desktop shortcut"
 
 echo "PrintNode setup complete!" 

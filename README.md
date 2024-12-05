@@ -6,6 +6,7 @@ A Python-based application for printing barcode labels using a Zebra ZD220 print
 ## Features
 - Compatible with Zebra ZD220 label printer
 - XML feed integration for product data
+- PrintNode integration for remote printing
 - User-friendly GUI interface
 - Automatic startup on boot
 - Desktop shortcut for manual launch
@@ -89,6 +90,21 @@ systemctl status cups
 4. Check printer status:
 ```bash
 lpstat -p ZebraZD220
+```
+
+
+## PrintNode Setup
+The application includes PrintNode for remote printing capabilities. After installation:
+
+1. Get your PrintNode API key from https://www.printnode.com/
+2. Configure PrintNode:
+```bash
+sudo printnode-config --apikey="YOUR_API_KEY"
+```
+
+3. Verify PrintNode status:
+```bash
+sudo systemctl status printnode-client
 ```
 
 

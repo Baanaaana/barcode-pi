@@ -35,17 +35,6 @@ sudo apt-get install -y \
     pyqt5-dev-tools \
     qttools5-dev-tools
 
-# Remove old installation if exists
-echo "Cleaning up old installation..."
-sudo systemctl stop barcode-printer.service 2>/dev/null || true
-sudo systemctl disable barcode-printer.service 2>/dev/null || true
-sudo rm -f /etc/systemd/system/barcode-printer.service
-sudo systemctl daemon-reload
-rm -rf ~/barcode-pi
-rm -rf ~/barcode_env
-rm -f ~/Desktop/BarcodeApp.desktop
-rm -f ~/.config/autostart/barcode_printer.desktop
-
 # Create virtual environment
 echo "Creating Python virtual environment..."
 python3 -m venv ~/barcode_env --system-site-packages
@@ -118,7 +107,7 @@ echo "Creating printer setup files..."
 cat > setup_zebra_printer.sh << 'EOL'
 #!/bin/bash
 
-echo "Setting up Zebra GK420D printer..."
+echo "Setting up Zebra ZD220 printer..."
 
 # Check if running as root
 if [ "$EUID" -ne 0 ]; then 
@@ -172,19 +161,19 @@ systemctl start cups
 # Wait for CUPS to fully start
 sleep 5
 
-# Add Zebra GK420D printer
-echo "Adding Zebra GK420D printer..."
-lpadmin -p ZebraGK420D \
+# Add Zebra ZD220 printer
+echo "Adding Zebra ZD220 printer..."
+lpadmin -p ZebraZD220 \
     -E \
-    -v usb://Zebra/GK420d \
+    -v usb://Zebra/ZD220 \
     -m raw \
     -o printer-is-shared=true
 
 # Set as default printer
-lpoptions -d ZebraGK420D
+lpoptions -d ZebraZD220
 
 # Configure default settings for 4x6 labels
-lpoptions -p ZebraGK420D -o media=w4h6.0 -o resolution=203dpi
+lpoptions -p ZebraZD220 -o media=w4h6.0 -o resolution=203dpi
 
 # Create test label
 cat > /tmp/test_label.zpl << EOF
@@ -199,17 +188,17 @@ EOF
 
 # Test print the barcode
 echo "Printing test barcode..."
-lp -d ZebraGK420D /tmp/test_label.zpl
+lp -d ZebraZD220 /tmp/test_label.zpl
 
 # Update the barcode application configuration
 if [ -f "/home/pi/barcode-pi/config.ini" ]; then
     echo "Updating barcode application configuration..."
-    sed -i 's/^printer_name=.*/printer_name=ZebraGK420D/' /home/pi/barcode-pi/config.ini
+    sed -i 's/^printer_name=.*/printer_name=ZebraZD220/' /home/pi/barcode-pi/config.ini
 else
     echo "Creating barcode application configuration..."
     cat > /home/pi/barcode-pi/config.ini << EOF
 [Printer]
-printer_name=ZebraGK420D
+printer_name=ZebraZD220
 auto_print=true
 copies=1
 EOF
@@ -220,8 +209,8 @@ chown pi:pi /home/pi/barcode-pi/config.ini
 
 echo "Printer setup complete!"
 echo "Test barcode has been sent to the printer"
-echo "The barcode application has been configured to use the Zebra GK420D printer"
-echo "You can check printer status by running: lpstat -p ZebraGK420D"
+echo "The barcode application has been configured to use the Zebra ZD220 printer"
+echo "You can check printer status by running: lpstat -p ZebraZD220"
 EOL
 
 cat > verify_printer.py << 'EOL'
@@ -235,16 +224,16 @@ def verify_printer():
     
     zebra_printer = None
     for printer in printers:
-        if printer == 'ZebraGK420D':
+        if printer == 'ZebraZD220':
             zebra_printer = printer
             break
     
     if zebra_printer:
-        print("✓ Zebra GK420D printer found and configured")
+        print("✓ Zebra ZD220 printer found and configured")
         print(f"Printer status: {printers[zebra_printer]['printer-state-message']}")
         return True
     else:
-        print("✗ Zebra GK420D printer not found")
+        print("✗ Zebra ZD220 printer not found")
         print("Available printers:", list(printers.keys()))
         return False
 
@@ -266,7 +255,7 @@ rm -rf ./temp
 # Create printer setup instructions
 echo "Creating printer setup instructions..."
 cat > ~/barcode-pi/PRINTER_SETUP.txt << EOL
-To set up your Zebra GK420D printer:
+To set up your Zebra ZD220 printer:
 
 1. Connect the printer via USB to your Raspberry Pi
 2. Run the setup script:
@@ -281,7 +270,7 @@ EOL
 echo "Creating printer configuration..."
 cat > ~/barcode-pi/config.ini << EOF
 [Printer]
-printer_name=ZebraGK420D
+printer_name=ZebraZD220
 auto_print=true
 copies=1
 EOF

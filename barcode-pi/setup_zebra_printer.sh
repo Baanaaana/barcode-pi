@@ -110,3 +110,17 @@ lp -d ZebraZD220 -o raw /tmp/test_label.zpl
 echo "Printer setup complete!"
 echo "Test barcode has been sent to the printer"
 echo "You can check printer status by running: lpstat -p ZebraZD220"
+echo ""
+echo "Setup complete! System will reboot in 10 seconds..."
+echo "Press Ctrl+C to cancel reboot"
+echo ""
+
+# Countdown
+for i in {10..1}
+do
+    echo -ne "\rRebooting in $i seconds... "
+    sleep 1
+done
+
+echo -e "\rRebooting now...            "
+sudo reboot

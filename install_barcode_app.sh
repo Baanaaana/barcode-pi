@@ -182,7 +182,7 @@ chmod +x ~/barcode-pi/setup_zebra_printer.sh
 chmod +x ~/barcode-pi/verify_printer.py
 chmod +x ~/barcode-pi/remove_printers.sh
 chmod +x ~/barcode-pi/setup_printnode.sh
-chmod +x ~/barcode-pi/setup_printnode_service/sh
+chmod +x ~/barcode-pi/setup_printnode_service.sh
 
 echo "Installation complete!"
 echo "The application will start automatically on next boot"

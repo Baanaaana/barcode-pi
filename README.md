@@ -1,10 +1,10 @@
 # Barcode Label Printer for Raspberry Pi
 
-A Python-based application for printing barcode labels using a Zebra ZD220 printer on Raspberry Pi. The application fetches product data from an XML feed and allows for easy barcode label printing.
+A Python-based application for printing barcode labels using a Zebra ZPL printer on Raspberry Pi. The application fetches product data from an XML feed and allows for easy barcode label printing.
 
 
 ## Features
-- Compatible with Zebra ZD220 label printer
+- Compatible with Zebra ZPL label printer
 - XML feed integration for product data
 - PrintNode integration for remote printing capabilities
 - User-friendly GUI interface
@@ -16,7 +16,7 @@ A Python-based application for printing barcode labels using a Zebra ZD220 print
 
 ## Requirements
 - Raspberry Pi (tested on Raspberry Pi OS)
-- Zebra ZD220 label printer
+- Zebra ZPL label printer
 - Internet connection for XML feed
 - Display for GUI interface
 - PrintNode account (for remote printing)
@@ -61,9 +61,9 @@ python3 /home/pi/barcode-pi/set_url.py "XML_FEED_URL"
 
 
 ## Printer Setup
-The system includes support for the Zebra ZD220 label printer. To set up the printer:
+The system includes support for the Zebra ZPL label printer. To set up the printer:
 
-1. Connect the Zebra ZD220 printer to your Raspberry Pi via USB
+1. Connect the Zebra ZPL printer to your Raspberry Pi via USB
 
 2. Run the printer setup commands:
 ```bash
@@ -131,18 +131,30 @@ The printer setup script will automatically download and extract PrintNode. You'
 
 
 ## Uninstallation
-To uninstall the application:
+To uninstall the Barcode Application and PrintNode:
+
 ```bash
+# Stop and disable the Barcode Printer service
 sudo systemctl stop barcode-printer.service && \
 sudo systemctl disable barcode-printer.service && \
 sudo rm -f /etc/systemd/system/barcode-printer.service && \
-sudo systemctl daemon-reload && \
+sudo systemctl daemon-reload
+
+# Remove the Barcode Application files and virtual environment
 rm -rf ~/barcode-pi && \
 rm -rf ~/barcode_env && \
 rm -f ~/Desktop/BarcodeApp.desktop && \
 rm -f ~/.config/autostart/barcode_printer.desktop
-```
 
+# Stop and disable the PrintNode service
+sudo systemctl stop printnode && \
+sudo systemctl disable printnode && \
+sudo rm -f /etc/systemd/system/printnode.service && \
+sudo systemctl daemon-reload
+
+# Remove the PrintNode directory
+rm -rf /home/pi/printnode
+```
 
 ## Troubleshooting
 If you encounter any issues:

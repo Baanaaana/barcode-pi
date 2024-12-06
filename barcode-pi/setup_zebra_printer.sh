@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "Setting up Zebra ZD220 printer..."
+echo "Setting up Zebra ZPL printer..."
 
 # Check if running as root
 if [ "$EUID" -ne 0 ]; then 
@@ -85,9 +85,9 @@ fi
 
 echo "Found printer at: $PRINTER_URI"
 
-# Add Zebra ZD220 printer with specific settings
-echo "Adding Zebra ZD220 printer..."
-lpadmin -p ZebraZD220 \
+# Add Zebra ZPL printer with specific settings
+echo "Adding Zebra ZPL printer..."
+lpadmin -p ZebraZPL \
     -E \
     -v "$PRINTER_URI" \
     -P /home/pi/barcode-pi/zebra.ppd \
@@ -97,7 +97,7 @@ lpadmin -p ZebraZD220 \
     -o Resolution=203dpi
 
 # Set as default printer
-lpoptions -d ZebraZD220
+lpoptions -d ZebraZPL
 
 # Create test label
 cat > /tmp/test_label.zpl << EOF
@@ -117,11 +117,11 @@ EOF
 
 # Test print the barcode
 echo "Printing test barcode..."
-lp -d ZebraZD220 -o raw /tmp/test_label.zpl
+lp -d ZebraZPL -o raw /tmp/test_label.zpl
 
 echo "Printer setup complete!"
 echo "Test barcode has been sent to the printer"
-echo "You can check printer status by running: lpstat -p ZebraZD220"
+echo "You can check printer status by running: lpstat -p ZebraZPL"
 echo ""
 echo "Setup complete! System will reboot in 10 seconds..."
 echo "Press Ctrl+C to cancel reboot"

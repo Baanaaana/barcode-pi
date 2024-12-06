@@ -109,7 +109,7 @@ cp -r ./temp/barcode-pi/* .
 rm -rf ./temp
 
 # Display printer setup instructions
-echo "To set up your Zebra ZD220 printer:"
+echo "To set up your Zebra ZPL printer:"
 echo "1. Connect the printer via USB to your Raspberry Pi"
 echo "2. Run the setup script: sudo ./setup_zebra_printer.sh"
 echo "3. Verify the printer setup: python3 verify_printer.py"
@@ -119,7 +119,7 @@ echo "A test barcode will be printed automatically during setup."
 echo "Creating printer configuration..."
 cat > ~/barcode-pi/config.ini << EOF
 [Printer]
-printer_name=ZebraZD220
+printer_name=ZebraZPL
 auto_print=true
 copies=1
 EOF

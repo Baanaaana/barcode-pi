@@ -133,7 +133,7 @@ cat > ~/Desktop/BarcodeApp.desktop << EOF
 Type=Application
 Name=Barcode App
 Exec=/home/pi/barcode-pi/run.sh
-Icon=applications-system
+Icon=/home/pi/barcode-pi/barcode.ico
 Terminal=false
 Categories=Utility;
 EOF
@@ -147,6 +147,7 @@ cat > ~/.config/autostart/barcode_printer.desktop << EOF
 Type=Application
 Name=Barcode Printer
 Exec=/home/pi/barcode-pi/run-sleep.sh
+Icon=/home/pi/barcode-pi/barcode.ico
 Terminal=false
 EOF
 

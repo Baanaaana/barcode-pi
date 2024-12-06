@@ -1,5 +1,15 @@
 #!/bin/bash
 
+echo "Removing all configured printers..."
+
+# Get list of all printers and remove them
+while IFS= read -r printer; do
+    if [ ! -z "$printer" ]; then
+        echo "Removing printer: $printer"
+        lpadmin -x "$printer"
+    fi
+done < <(lpstat -p | cut -d' ' -f2)
+
 echo "Setting up Zebra ZPL printer..."
 
 # Check if running as root
@@ -27,16 +37,6 @@ sed -i 's/Listen localhost:631/Port 631/' /etc/cups/cupsd.conf
 sudo sed -i 's/Browsing Yes/Browsing No/' /etc/cups/cupsd.conf
 sudo sed -i 's/Browsing On/Browsing Off/' /etc/cups/cupsd.conf
 sudo sed -i 's/BrowseRemoteProtocols dnssd/BrowseRemoteProtocols none/' /etc/cups/cups-browsed.conf
-
-echo "Removing all configured printers..."
-
-# Get list of all printers and remove them
-while IFS= read -r printer; do
-    if [ ! -z "$printer" ]; then
-        echo "Removing printer: $printer"
-        lpadmin -x "$printer"
-    fi
-done < <(lpstat -p | cut -d' ' -f2)
 
 # Add network access to CUPS
 cat >> /etc/cups/cupsd.conf << EOF

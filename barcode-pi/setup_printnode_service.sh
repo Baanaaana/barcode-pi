@@ -33,3 +33,17 @@ systemctl start printnode.service
 
 echo "PrintNode service has been enabled and started"
 echo "You can check its status with: systemctl status printnode" 
+echo ""
+echo "Setup complete! System will reboot in 10 seconds..."
+echo "Press Ctrl+C to cancel reboot"
+echo ""
+
+# Countdown
+for i in {10..1}
+do
+    echo -ne "\rRebooting in $i seconds... "
+    sleep 1
+done
+
+echo -e "\rRebooting now...            "
+sudo reboot

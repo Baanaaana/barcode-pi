@@ -56,4 +56,4 @@ echo "5. Run the following command to enable PrintNode service:"
 echo "   sudo ./setup_printnode_service.sh"
 echo "6. You can always start PrintNode GUI using the desktop shortcut"
 
-echo "PrintNode setup complete!" 
+echo "PrintNode setup complete!"

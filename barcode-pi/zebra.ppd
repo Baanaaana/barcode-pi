@@ -35,7 +35,7 @@
 *cupsLanguages: "en"
 *OpenUI *PageSize/Media Size: PickOne
 *OrderDependency: 10 AnySetup *PageSize
-*DefaultPageSize: w288h288
+*DefaultPageSize: w162h90
 *PageSize w90h18/1.25x0.25": "<</PageSize[90 18]/ImagingBBox null>>setpagedevice"
 *PageSize w90h162/1.25x2.25": "<</PageSize[90 162]/ImagingBBox null>>setpagedevice"
 *PageSize w108h18/1.50x0.25": "<</PageSize[108 18]/ImagingBBox null>>setpagedevice"
@@ -93,7 +93,7 @@
 *CloseUI: *PageSize
 *OpenUI *PageRegion/Media Size: PickOne
 *OrderDependency: 10 AnySetup *PageRegion
-*DefaultPageRegion: w288h288
+*DefaultPageRegion: w162h90
 *PageRegion w90h18/1.25x0.25": "<</PageSize[90 18]/ImagingBBox null>>setpagedevice"
 *PageRegion w90h162/1.25x2.25": "<</PageSize[90 162]/ImagingBBox null>>setpagedevice"
 *PageRegion w108h18/1.50x0.25": "<</PageSize[108 18]/ImagingBBox null>>setpagedevice"
@@ -149,7 +149,7 @@
 *PageRegion w576h432/8.00x6.00": "<</PageSize[576 432]/ImagingBBox null>>setpagedevice"
 *PageRegion w576h468/8.00x6.50": "<</PageSize[576 468]/ImagingBBox null>>setpagedevice"
 *CloseUI: *PageRegion
-*DefaultImageableArea: w288h288
+*DefaultImageableArea: w162h90
 *ImageableArea w90h18/1.25x0.25": "0 0 90 18"
 *ImageableArea w90h162/1.25x2.25": "0 0 90 162"
 *ImageableArea w108h18/1.50x0.25": "0 0 108 18"
@@ -204,7 +204,7 @@
 *ImageableArea w576h360/8.00x5.00": "0 0 576 360"
 *ImageableArea w576h432/8.00x6.00": "0 0 576 432"
 *ImageableArea w576h468/8.00x6.50": "0 0 576 468"
-*DefaultPaperDimension: w288h288
+*DefaultPaperDimension: w162h90
 *PaperDimension w90h18/1.25x0.25": "90 18"
 *PaperDimension w90h162/1.25x2.25": "90 162"
 *PaperDimension w108h18/1.50x0.25": "108 18"

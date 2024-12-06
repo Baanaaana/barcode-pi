@@ -22,9 +22,9 @@ usermod -a -G lpadmin pi
 # Stop CUPS service to modify configuration
 systemctl stop cups
 
-# Configure CUPS to allow remote administration
+# Configure CUPS to allow remote administration and disable network printer browsing
 sed -i 's/Listen localhost:631/Port 631/' /etc/cups/cupsd.conf
-sed -i 's/Browsing Off/Browsing On/' /etc/cups/cupsd.conf
+sed -i 's/Browsing On/Browsing Off/' /etc/cups/cupsd.conf
 
 # Add network access to CUPS
 cat >> /etc/cups/cupsd.conf << EOF
@@ -81,8 +81,8 @@ lpadmin -p ZebraZD220 \
     -P /home/pi/barcode-pi/zebra.ppd \
     -o printer-is-shared=true \
     -o printer-error-policy=abort-job \
-    -o PageSize=Custom.57x32mm \
-    -o Resolution=302dpi
+    -o PageSize=w162h90 \
+    -o Resolution=203dpi
 
 # Set as default printer
 lpoptions -d ZebraZD220

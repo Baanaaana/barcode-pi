@@ -80,7 +80,9 @@ lpadmin -p ZebraZD220 \
     -v "$PRINTER_URI" \
     -P /home/pi/barcode-pi/zebra.ppd \
     -o printer-is-shared=true \
-    -o printer-error-policy=abort-job
+    -o printer-error-policy=abort-job \
+    -o PageSize=Custom.57x32mm \
+    -o Resolution=302dpi
 
 # Set as default printer
 lpoptions -d ZebraZD220

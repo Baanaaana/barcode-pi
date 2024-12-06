@@ -24,7 +24,7 @@ systemctl stop cups
 
 # Configure CUPS to allow remote administration and disable network printer browsing
 sed -i 's/Listen localhost:631/Port 631/' /etc/cups/cupsd.conf
-sed -i 's/Browsing On/Browsing Off/' /etc/cups/cupsd.conf
+sudo sed -i 's/Browsing Yes/Browsing No/' /etc/cups/cupsd.conf
 
 # Add network access to CUPS
 cat >> /etc/cups/cupsd.conf << EOF

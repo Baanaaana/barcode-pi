@@ -78,17 +78,20 @@ echo "Adding Zebra ZD220 printer..."
 lpadmin -p ZebraZD220 \
     -E \
     -v "$PRINTER_URI" \
-    -m raw \
+    -m everywhere \
     -o printer-is-shared=true \
     -o printer-error-policy=abort-job
+
+# Set Make and Model
+lpadmin -p ZebraZD220 -m "Zebra/Zebra ZPL Label Printer (en)"
 
 # Set as default printer
 lpoptions -d ZebraZD220
 
 # Configure specific settings for ZD220
 lpoptions -p ZebraZD220 \
-    -o Resolution=203dpi \
-    -o media=w4h6.0
+    -o PageSize=Custom.57x32mm \
+    -o Resolution=203dpi
 
 # Create test label
 cat > /tmp/test_label.zpl << EOF

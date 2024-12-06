@@ -153,6 +153,7 @@ sudo rm -f /etc/systemd/system/printnode.service && \
 sudo systemctl daemon-reload
 
 # Remove the PrintNode directory
+rm -f ~/Desktop/PrintNode.desktop && \
 rm -rf /home/pi/printnode
 ```
 

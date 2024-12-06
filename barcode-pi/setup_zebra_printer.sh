@@ -85,11 +85,6 @@ lpadmin -p ZebraZD220 \
 # Set as default printer
 lpoptions -d ZebraZD220
 
-# Configure specific settings for ZD220
-lpoptions -p ZebraZD220 \
-    -o PageSize=Custom.57x32mm \
-    -o Resolution=203dpi
-
 # Create test label
 cat > /tmp/test_label.zpl << EOF
 ^XA

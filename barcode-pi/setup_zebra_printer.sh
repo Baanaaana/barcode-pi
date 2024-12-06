@@ -78,12 +78,9 @@ echo "Adding Zebra ZD220 printer..."
 lpadmin -p ZebraZD220 \
     -E \
     -v "$PRINTER_URI" \
-    -m everywhere \
+    -P /home/pi/barcode-pi/zebra.ppd \
     -o printer-is-shared=true \
     -o printer-error-policy=abort-job
-
-# Set Make and Model
-lpadmin -p ZebraZD220 -m "Zebra/Zebra ZPL Label Printer (en)"
 
 # Set as default printer
 lpoptions -d ZebraZD220

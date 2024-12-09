@@ -381,7 +381,7 @@ QSpinBox::down-button{width:50px}</string>
        <property name="font">
         <font>
          <family>FreeSans</family>
-         <pointsize>48</pointsize>
+         <pointsize>42</pointsize>
          <weight>50</weight>
          <italic>false</italic>
          <bold>false</bold>
@@ -411,7 +411,7 @@ QSpinBox::down-button{width:50px}</string>
         <bool>false</bool>
        </property>
        <property name="placeholderText">
-        <string>EAN / UPC / SKU</string>
+        <string>EAN / UPC / SKU / Location</string>
        </property>
       </widget>
      </widget>

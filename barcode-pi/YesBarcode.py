@@ -152,7 +152,6 @@ class MainWindow_exec(QtWidgets.QMainWindow, Ui_MainWindow):
         self.box_url.setText(self.url)
 
         self.default_printer=self.settings.value('default_printer','')
-#        self.copies=self.settings.value('copies','1')
         self.autoprint=self.settings.value('autoprint',True)
         print(self.autoprint)
         if self.autoprint=='true':
@@ -160,7 +159,6 @@ class MainWindow_exec(QtWidgets.QMainWindow, Ui_MainWindow):
         elif self.autoprint=='false':
             self.autoprint=False
 
-#        self.spin_copies.setValue(int(self.copies))
         self.check_autoprint.setChecked(self.autoprint)
 
         print( self.spin_copies.value() )
@@ -186,14 +184,12 @@ class MainWindow_exec(QtWidgets.QMainWindow, Ui_MainWindow):
 
         self.combo_printers.setFocusPolicy(QtCore.Qt.NoFocus)
         self.btn_refresh.setFocusPolicy(QtCore.Qt.NoFocus)
-#        self.spin_copies.setFocusPolicy(QtCore.Qt.NoFocus)
         self.check_autoprint.setFocusPolicy(QtCore.Qt.NoFocus)
         self.btn_print.setFocusPolicy(QtCore.Qt.NoFocus)
         self.label_barcode.setFocusPolicy(QtCore.Qt.NoFocus)
  
         self.label_barcode.setPixmap(QtGui.QPixmap("/home/pi/barcode-pi/label.png"))
 
-#        self.btn_refresh.setPixmap(QtGui.QPixmap("/home/pi/barcode-pi/refresh.png"))
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("/home/pi/barcode-pi/refresh.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_refresh.setIcon(icon)

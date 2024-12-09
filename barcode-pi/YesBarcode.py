@@ -1,4 +1,3 @@
-from PIL import ImageFilter
 from appdirs import user_data_dir
 import xml.etree.ElementTree as ET
 
@@ -7,23 +6,16 @@ import requests
 import os
 os.system('pyuic5 -x neo_bar.ui -o neo_bar.py')
 import sys
-from PIL import Image
-from io import BytesIO
-from PyQt5 import QtWidgets,QtGui,QtCore
+from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtCore import Qt
 from neo_bar import Ui_MainWindow
 from multiprocessing import freeze_support
-from PyQt5.QtCore import pyqtSlot,QThread,pyqtSignal
+from PyQt5.QtCore import pyqtSlot, QThread, pyqtSignal
 
 import platform
-if platform.system()=='Linux':
+if platform.system() == 'Linux':
     from zebra import zebra
 import textwrap
-
-from PIL import Image, ImageDraw,ImageFont
-import barcode
-from barcode.writer import ImageWriter
-
 
 import os.path
 import sys

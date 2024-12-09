@@ -346,8 +346,16 @@ class MainWindow_exec(QtWidgets.QMainWindow, Ui_MainWindow):
                     sku = lst[0] + '~'
                     prodname = lst[1]
                 except KeyError:
-                    print('No product for ean, proceeding to print...')
-                    self.label_not_found.setText('EAN niet bekend. Printen...')
+                    # Attempt to look up by SKU if EAN is not found
+                    try:
+                        print(f"Looking up SKU: {cleaned_input}")
+                        lst = self.sku_dict[cleaned_input]
+
+                        ean = lst[0]
+                        prodname = lst[1]
+                    except KeyError:
+                        print('No product for SKU or EAN, proceeding to print...')
+                        self.label_not_found.setText('EAN niet bekend. Printen...')
 
             if prodname is None:
                 prodname = ''

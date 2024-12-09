@@ -329,26 +329,12 @@ class MainWindow_exec(QtWidgets.QMainWindow, Ui_MainWindow):
             cleaned_input = ''.join(filter(str.isdigit, input_text))
             print(f"Cleaned Input: {cleaned_input}")
 
-            if len(cleaned_input) < 12:
-                try:
-                    print(f"Looking up SKU: {cleaned_input}")
-                    lst = self.sku_dict[cleaned_input]
-
-                    sku = cleaned_input + '~'
-                    ean = lst[0]
-                    prodname = lst[1]
-
-                    # Set the container variable to the last digit of the ean
-                    if len(ean) <= 11:
-                        container = ean[-1]
-
-                except KeyError:
-                    print('No product for sku,return')
-                    self.label_not_found.setText('Artikelnummer onbekend')
-                    self.read_product.clear()
-                    self.read_product.setFocus(True)
-                    return
-            elif len(cleaned_input) >= 12:
+            if len(cleaned_input) <= 11:
+                # Directly use the cleaned input for short inputs
+                ean = cleaned_input
+                container = ean[-1] if ean else ''
+                print('Short input detected. EAN:', ean, 'Container:', container)
+            else:
                 if len(cleaned_input.split('~')) > 1:
                     print('Auto print keep ean, reprocess')
                     cleaned_input = cleaned_input.split('~')[1]
@@ -362,11 +348,7 @@ class MainWindow_exec(QtWidgets.QMainWindow, Ui_MainWindow):
                 except KeyError:
                     print('No product for ean,continue')
                     self.label_not_found.setText('EAN niet bekend. Printen...')
-            else:
-                print('Minimaal 6 of maximaal 13 tekens')
-                self.label_not_found.setText('Minimaal 6 of maximaal 13 tekens')
-                self.read_product.clear()
-                return
+                    return
 
             if prodname is None:
                 prodname = ''

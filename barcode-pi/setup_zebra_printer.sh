@@ -103,16 +103,11 @@ configure_printer() {
     # Create test label
     cat > /tmp/test_label.zpl << EOF
 ^XA
-^MMT
-^PW406
-^LL0305
-^LS0
-^FO50,50^BY3
-^BCN,100,Y,N,N
-^FD123456789^FS
-^FO50,170^A0N,30,30
-^FDTest Barcode^FS
-^PQ1
+^LH0,25
+^FO30,10^A0,30^FDZebra Barcode Printer^FS
+^FO30,50^A0,30^FDSuccessfully Installed^FS
+^FO30,90^BY3^BEN,60,N,N,N,N^FD' + ean + '^FS
+^FO30,180^A0,30^FD123456 | 123456789123^FS
 ^XZ
 EOF
 

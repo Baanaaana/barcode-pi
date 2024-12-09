@@ -329,16 +329,15 @@ class MainWindow_exec(QtWidgets.QMainWindow, Ui_MainWindow):
             cleaned_input = input_text
             print(f"Original Input: {cleaned_input}")
 
-            if len(cleaned_input) <= 11:
-                # Directly use the cleaned input for short inputs
-                ean = cleaned_input
-                container = ean[-1] if ean else ''
-                print('Short input detected. EAN:', ean, 'Container:', container)
-            else:
-                if len(cleaned_input.split('~')) > 1:
-                    print('Auto print keep ean, reprocess')
-                    cleaned_input = cleaned_input.split('~')[1]
-                ean = cleaned_input
+            # Attempt to look up by SKU first
+            try:
+                print(f"Looking up SKU: {cleaned_input}")
+                lst = self.sku_dict[cleaned_input]
+
+                ean = lst[0]
+                prodname = lst[1]
+            except KeyError:
+                # If SKU is not found, attempt to look up by EAN
                 try:
                     print(f"Looking up EAN: {cleaned_input}")
                     lst = self.ean_dict[cleaned_input]
@@ -346,16 +345,8 @@ class MainWindow_exec(QtWidgets.QMainWindow, Ui_MainWindow):
                     sku = lst[0] + '~'
                     prodname = lst[1]
                 except KeyError:
-                    # Attempt to look up by SKU if EAN is not found
-                    try:
-                        print(f"Looking up SKU: {cleaned_input}")
-                        lst = self.sku_dict[cleaned_input]
-
-                        ean = lst[0]
-                        prodname = lst[1]
-                    except KeyError:
-                        print('No product for SKU or EAN, proceeding to print...')
-                        self.label_not_found.setText('EAN niet bekend. Printen...')
+                    print('No product for SKU or EAN, proceeding to print...')
+                    self.label_not_found.setText('EAN niet bekend. Printen...')
 
             if prodname is None:
                 prodname = ''

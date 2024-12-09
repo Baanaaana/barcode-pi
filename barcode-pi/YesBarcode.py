@@ -313,43 +313,48 @@ class MainWindow_exec(QtWidgets.QMainWindow, Ui_MainWindow):
             except Exception as e:
                 print('special keys',e)
 
-    def call_decode(self,manual_print=False):
+    def call_decode(self, manual_print=False):
         self.label_not_found.setText('')
-        sku=''
-        ean=''
-        prodname=''
-        
-        if len( self.read_product.text() )==0:
+        sku = ''
+        ean = ''
+        prodname = ''
+        container = ''  # Initialize the container variable
+
+        if len(self.read_product.text()) == 0:
             print('enter something')
-            return;
+            return
         else:
-            if len(self.read_product.text())<12:
+            if len(self.read_product.text()) < 12:
                 try:
                     print(self.sku_dict[self.read_product.text()])
-                    lst=self.sku_dict[self.read_product.text()]
-                    
-                    sku=self.read_product.text()+'~'
-                    ean=lst[0]
-                    prodname=lst[1]
-                    
+                    lst = self.sku_dict[self.read_product.text()]
+
+                    sku = self.read_product.text() + '~'
+                    ean = lst[0]
+                    prodname = lst[1]
+
+                    # Set the container variable to the last digit of the ean
+                    if len(ean) <= 11:
+                        container = ean[-1]
+
                 except:
                     print('No product for sku,return')
                     self.label_not_found.setText('Artikelnummer onbekend')
                     self.read_product.clear()
                     self.read_product.setFocus(True)
-                    return;
-            elif len(self.read_product.text())>=12:
-                if len(self.read_product.text().split('~'))>1:
+                    return
+            elif len(self.read_product.text()) >= 12:
+                if len(self.read_product.text().split('~')) > 1:
                     print('Auto print keep ean, reprocess')
                     self.read_product.setText(self.read_product.text().split('~')[1])
                 try:
-                    ean=self.read_product.text()
+                    ean = self.read_product.text()
 
                     print(self.ean_dict[self.read_product.text()])
-                    lst=self.ean_dict[self.read_product.text()]
-                    
-                    sku=lst[0]+'~'
-                    prodname=lst[1]
+                    lst = self.ean_dict[self.read_product.text()]
+
+                    sku = lst[0] + '~'
+                    prodname = lst[1]
                 except:
                     print('No product for ean,continue')
                     self.label_not_found.setText('EAN niet bekend. Printen...')
@@ -357,32 +362,37 @@ class MainWindow_exec(QtWidgets.QMainWindow, Ui_MainWindow):
                 print('Minimaal 6 of maximaal 13 tekens')
                 self.label_not_found.setText('Minimaal 6 of maximaal 13 tekens')
                 self.read_product.clear()
-                return;
-                
-            if prodname==None:
-                prodname=''
+                return
 
-            print('SKU:',sku)
-            print('EAN:',ean)
-            print('PRD:',prodname)
-            
-            self.read_product.setText(sku+ean)
+            if prodname is None:
+                prodname = ''
+
+            print('SKU:', sku)
+            print('EAN:', ean)
+            print('PRD:', prodname)
+            print('Container:', container)  # Print the container for debugging
+
+            self.read_product.setText(sku + ean)
             QtWidgets.QApplication.processEvents()
 
-              
-            if len(prodname)<=28:
+            # Existing label layout logic
+            if len(prodname) <= 28:
                 if 'ZebraBarcode' in self.combo_printers.currentText():
-                   if len(ean) == 12:
-                       zpl='^XA^LH0,20^FO30,20^A0,30^FD'+prodname+'^FS^FO340,80^A0,20^FDUPC^FS^FO30,60^BY3^BUN,60,N,N,N,N^FD'+ean+'^FS^FO30,150^A0,30^FD'+sku+ean+'^FS^XZ'
-                   else:
-                       zpl='^XA^LH0,20^FO30,20^A0,30^FD'+prodname+'^FS^FO340,80^A0,20^FDEAN^FS^FO30,60^BY3^BEN,60,N,N,N,N^FD'+ean+'^FS^FO30,150^A0,30^FD'+sku+ean+'^FS^XZ'
+                    if len(ean) <= 11:
+                        zpl = '^XA^LH0,25^FO30,0^A0,60^FD' + ean + '^FS^FO50,0^BY4,2.2,65^BQN,2,6^FD' + ean + '^FS^FO280,80^A0,120^FD' + container + '^FS^XZ'
+                    elif len(ean) == 12:
+                        zpl = '^XA^LH0,20^FO30,20^A0,30^FD' + prodname + '^FS^FO340,80^A0,20^FDUPC^FS^FO30,60^BY3^BUN,60,N,N,N,N^FD' + ean + '^FS^FO30,150^A0,30^FD' + sku + ean + '^FS^XZ'
+                    else:
+                        zpl = '^XA^LH0,20^FO30,20^A0,30^FD' + prodname + '^FS^FO340,80^A0,20^FDEAN^FS^FO30,60^BY3^BEN,60,N,N,N,N^FD' + ean + '^FS^FO30,150^A0,30^FD' + sku + ean + '^FS^XZ'
             else:
-                tlist=textwrap.fill(prodname, 28).split('\n')
+                tlist = textwrap.fill(prodname, 28).split('\n')
                 if 'ZebraBarcode' in self.combo_printers.currentText():
-                   if len(ean) == 12:
-                       zpl='^XA^LH0,25^FO30,10^A0,30^FD'+tlist[0]+'^FS^FO30,50^A0,30^FD'+tlist[1]+'^FS^FO340,110^A0,20^FDUPC^FS^FO30,90^BY3^BUN,60,N,N,N,N^FD'+ean+'^FS^FO30,180^A0,30^FD'+sku+ean+'^FS^XZ'
-                   else:
-                       zpl='^XA^LH0,25^FO30,10^A0,30^FD'+tlist[0]+'^FS^FO30,50^A0,30^FD'+tlist[1]+'^FS^FO340,110^A0,20^FDEAN^FS^FO30,90^BY3^BEN,60,N,N,N,N^FD'+ean+'^FS^FO30,180^A0,30^FD'+sku+ean+'^FS^XZ'
+                    if len(ean) <= 11:
+                        zpl = '^XA^LH0,25^FO30,0^A0,60^FD' + ean + '^FS^FO50,0^BY4,2.2,65^BQN,2,6^FD' + ean + '^FS^FO280,80^A0,120^FD' + container + '^FS^XZ'
+                    elif len(ean) == 12:
+                        zpl = '^XA^LH0,25^FO30,10^A0,30^FD' + tlist[0] + '^FS^FO30,50^A0,30^FD' + tlist[1] + '^FS^FO340,110^A0,20^FDUPC^FS^FO30,90^BY3^BUN,60,N,N,N,N^FD' + ean + '^FS^FO30,180^A0,30^FD' + sku + ean + '^FS^XZ'
+                    else:
+                        zpl = '^XA^LH0,25^FO30,10^A0,30^FD' + tlist[0] + '^FS^FO30,50^A0,30^FD' + tlist[1] + '^FS^FO340,110^A0,20^FDEAN^FS^FO30,90^BY3^BEN,60,N,N,N,N^FD' + ean + '^FS^FO30,180^A0,30^FD' + sku + ean + '^FS^XZ'
 
             try:
                 del z

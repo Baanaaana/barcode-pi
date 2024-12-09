@@ -325,9 +325,9 @@ class MainWindow_exec(QtWidgets.QMainWindow, Ui_MainWindow):
             print('enter something')
             return
         else:
-            # Remove non-numeric characters for processing
-            cleaned_input = ''.join(filter(str.isdigit, input_text))
-            print(f"Cleaned Input: {cleaned_input}")
+            # Use the original input for processing
+            cleaned_input = input_text
+            print(f"Original Input: {cleaned_input}")
 
             if len(cleaned_input) <= 11:
                 # Directly use the cleaned input for short inputs

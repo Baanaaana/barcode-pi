@@ -384,101 +384,71 @@ class MainWindow_exec(QtWidgets.QMainWindow, Ui_MainWindow):
                 None
 
             try:
-                '''
-                # adjust print density (8dpmm), label width (4 inches), label height (6 inches), and label index (0) as necessary
-                url = 'http://api.labelary.com/v1/printers/8dpmm/labels/2.3x1.3/0/'
-                files = {'file' : zpl}
-                #headers = {'Accept' : 'application/pdf'} # omit this line to get PNG images back
-                response = requests.post(url, files = files, stream = True,timeout=3)
-        
-                if response.status_code == 200:
-                    response.raw.decode_content = True
-        
-                    im = Image.open(BytesIO(response.content))
-        #            self.label_barcode.setPixmap(img)
-        
-                    im = im.convert("RGBA")
-                    data = im.tobytes("raw","RGBA")
-                    qim = QtGui.QImage(data, im.size[0], im.size[1], QtGui.QImage.Format_RGBA8888)
-                    pix = QtGui.QPixmap.fromImage(qim)
-                    self.label_barcode.setPixmap(pix)
-                '''
-
-
                 EAN = barcode.get_barcode_class('ean13')
+                UPC = barcode.get_barcode_class('upc')
+
                 EAN.default_writer_options['write_text'] = False
-                o_ean = EAN(ean,writer=ImageWriter())
-                pil=o_ean.render()
-                
-                
+                UPC.default_writer_options['write_text'] = False
 
+                if len(ean) == 12:
+                    o_barcode = UPC(ean, writer=ImageWriter())
+                else:
+                    o_barcode = EAN(ean, writer=ImageWriter())
 
-                if len(prodname)<=24:
+                pil = o_barcode.render()
 
+                if len(prodname) <= 24:
                     img_w, img_h = pil.size
-                    background = Image.new('RGBA', (img_w,img_h+100), (255, 255, 255, 255))
+                    background = Image.new('RGBA', (img_w, img_h + 100), (255, 255, 255, 255))
                     bg_w, bg_h = background.size
-                    offset = ((bg_w - img_w) // 2, ((bg_h - img_h) // 2)-10)
+                    offset = ((bg_w - img_w) // 2, ((bg_h - img_h) // 2) - 10)
                     background.paste(pil, offset)
-
 
                     img_draw = ImageDraw.Draw(background)
                     font = ImageFont.truetype('FreeSans.ttf', 30)
                     img_draw.text((75, 10), prodname, fill='black', font=font)
-                    img_draw.text((100, 240), sku+ean, fill='black', font=font)
+                    img_draw.text((100, 240), sku + ean, fill='black', font=font)
                 else:
-
                     img_w, img_h = pil.size
-                    background = Image.new('RGBA', (img_w,img_h+100), (255, 255, 255, 255))
+                    background = Image.new('RGBA', (img_w, img_h + 100), (255, 255, 255, 255))
                     bg_w, bg_h = background.size
-                    offset = ((bg_w - img_w) // 2, ((bg_h - img_h) // 2)+20)
+                    offset = ((bg_w - img_w) // 2, ((bg_h - img_h) // 2) + 20)
                     background.paste(pil, offset)
 
-
-                    tlist=textwrap.fill(prodname, 24).split('\n')
+                    tlist = textwrap.fill(prodname, 24).split('\n')
                     img_draw = ImageDraw.Draw(background)
                     font = ImageFont.truetype("FreeSans.ttf", 30)
                     img_draw.text((75, 10), tlist[0], fill='black', font=font)
                     img_draw.text((75, 40), tlist[1], fill='black', font=font)
-                    img_draw.text((100, 260), sku+ean, fill='black', font=font)
+                    img_draw.text((100, 260), sku + ean, fill='black', font=font)
 
-
-                background = background.filter(ImageFilter.SHARPEN);
-                background = background.filter(ImageFilter.SHARPEN);
+                background = background.filter(ImageFilter.SHARPEN)
+                background = background.filter(ImageFilter.SHARPEN)
 
                 background = background.convert("RGBA")
-                data = background.tobytes("raw","RGBA")
+                data = background.tobytes("raw", "RGBA")
                 qim = QtGui.QImage(data, background.size[0], background.size[1], QtGui.QImage.Format_RGBA8888)
                 pix = QtGui.QPixmap.fromImage(qim)
                 self.label_barcode.setPixmap(pix)
-#                QtWidgets.QApplication.processEvents()
                 self.label_barcode.update_label()
 
-
-
-
-
-
-
             except Exception as e:
-                print('label update failed:',e)
+                print('label update failed:', e)
                 import traceback
 
                 print(traceback.format_exc())
 
             QtWidgets.QApplication.processEvents()
-            
-            print('printer command:',zpl)
-            zpl=zpl.replace('~','-')
 
+            print('printer command:', zpl)
+            zpl = zpl.replace('~', '-')
 
             if manual_print or self.check_autoprint.isChecked():
-                for x in range(0,self.spin_copies.value()):
+                for x in range(0, self.spin_copies.value()):
                     z = zebra()
-                    print ('Printer queues found:',z.getqueues())
+                    print('Printer queues found:', z.getqueues())
                     z.setqueue(self.combo_printers.currentText())
-                    z.setup(direct_thermal=True, label_height=(256,32), label_width=456)    # 3" x 2" direct thermal label
-                    #z.setup(direct_thermal=True, label_height=None, label_width=None)    # 3" x 2" direct thermal label
+                    z.setup(direct_thermal=True, label_height=(256, 32), label_width=456)  # 3" x 2" direct thermal label
                     z.output(zpl)
                     print(zpl)
             else:
@@ -488,10 +458,7 @@ class MainWindow_exec(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.label_barcode.setPixmap(QtGui.QPixmap("/home/pi/barcode-pi/label.png"))
                 self.label_barcode.update_label()
                 self.spin_copies.setValue(1)
-#            self.label_not_found.setText('')
             self.read_product.setFocus(True)
-
-
 
     def start_printing(self):
         print(self.read_ean.text())
@@ -504,7 +471,6 @@ class MainWindow_exec(QtWidgets.QMainWindow, Ui_MainWindow):
 
         
     def show_printer(self):
-
         self.combo_printers.blockSignals(True)
         self.combo_printers.clear()
         self.combo_printers.addItems(self.z.getqueues())        

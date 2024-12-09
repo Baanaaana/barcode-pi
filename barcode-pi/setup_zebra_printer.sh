@@ -75,12 +75,60 @@ configure_printer() {
 
     if [ "$LABEL_CHOICE" -eq 1 ]; then
         PPD_FILE="/home/pi/barcode-pi/zebra-barcode.ppd"
-        PAGE_SIZE="w57h32"
+        PAGE_SIZE="w162h90"
         PRINTER_NAME="ZebraBarcode"
+        # Create test label for barcode printer
+        cat > /tmp/test_label.zpl << EOF
+^XA
+^LH0,25
+^FO30,10^A0,30^FDZebra Barcode Printer^FS
+^FO30,50^A0,30^FDSuccessfully Installed^FS
+^FO30,90^BY3^BEN,60,N,N,N,N^FD123456789012^FS
+^FO30,180^A0,30^FD123456 | 123456789123^FS
+^XZ
+EOF
     elif [ "$LABEL_CHOICE" -eq 2 ]; then
         PPD_FILE="/home/pi/barcode-pi/zebra-shipping.ppd"
-        PAGE_SIZE="w150h102"
+        PAGE_SIZE="w432h288"
         PRINTER_NAME="ZebraShipping"
+        # Create test label for shipping printer
+        cat > /tmp/test_label.zpl << EOF
+^XA
+^FX
+^CF0,60
+^FO50,50^GB100,100,100^FS
+^FO75,75^FR^GB100,100,100^FS
+^FO93,93^GB40,40,40^FS
+^FO220,50^FDZebraShipping Printer^FS
+^FO220,120^FDSuccessfully Installed^FS
+^CF0,30
+^FO220,195^FDLabel size: 102x150mm^FS
+^FO50,250^GB700,3,3^FS
+^FX Second section with recipient address and permit information.
+^CFA,30
+^FO50,300^FDName^FS
+^FO50,340^FDAddress^FS
+^FO50,380^FDCity Postal code^FS
+^FO50,420^FDCountry^FS
+^CFA,15
+^FO600,300^GB150,150,3^FS
+^FO628,340^FDShipping^FS
+^FO638,390^FD123456^FS
+^FO50,500^GB700,3,3^FS
+^FX Third section with bar code.
+^BY5,3,270
+^FO100,550^BC^FD12345678^FS
+^FX Fourth section (the two boxes on the bottom).
+^FO50,900^GB700,250,3^FS
+^FO400,900^GB3,250,3^FS
+^CF0,40
+^FO100,960^FDORDER: 123456^FS
+^FO100,1010^FDREF1:   123456^FS
+^FO100,1060^FDREF2:   123456^FS
+^CF0,190
+^FO470,955^FDNL^FS
+^XZ
+EOF
     else
         echo "Invalid choice. Exiting."
         exit 1
@@ -100,23 +148,12 @@ configure_printer() {
     # Set as default printer
     lpoptions -d "$PRINTER_NAME"
 
-    # Create test label
-    cat > /tmp/test_label.zpl << EOF
-^XA
-^LH0,25
-^FO30,10^A0,30^FDZebra Barcode Printer^FS
-^FO30,50^A0,30^FDSuccessfully Installed^FS
-^FO30,90^BY3^BEN,60,N,N,N,N^FD' + ean + '^FS
-^FO30,180^A0,30^FD123456 | 123456789123^FS
-^XZ
-EOF
-
     # Test print the barcode
-    echo "Printing test barcode..."
+    echo "Printing test label..."
     lp -d "$PRINTER_NAME" -o raw /tmp/test_label.zpl
 
     echo "Printer setup complete!"
-    echo "Test barcode has been sent to the printer"
+    echo "Test label has been sent to the printer"
     echo "You can check printer status by running: lpstat -p $PRINTER_NAME"
 }
 

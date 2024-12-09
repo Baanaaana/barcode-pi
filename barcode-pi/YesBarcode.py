@@ -371,11 +371,11 @@ class MainWindow_exec(QtWidgets.QMainWindow, Ui_MainWindow):
 
               
             if len(prodname)<=24:
-                if 'ZPL' in self.combo_printers.currentText():
+                if 'ZebraBarcode' in self.combo_printers.currentText():
                     zpl='^XA^LH10,40^CFD10,10^FO80,30^AD^FD'+prodname+'^FS^FO80,55^BY3^BEN,100,N,N,N,N^FD'+ean+'^FS^FO105,170^AD^FD'+sku+ean+'^FS^XZ'
             else:
                 tlist=textwrap.fill(prodname, 24).split('\n')
-                if 'ZPL' in self.combo_printers.currentText():
+                if 'ZebraBarcode' in self.combo_printers.currentText():
                     zpl='^XA^LH10,30^CFD10,10^FO80,30^AD^FD'+tlist[0]+'^FS^FO80,50^AD^FD'+tlist[1]+'^FS^FO80,75^BY3^BEN,100,N,N,N,N^FD'+ean+'^FS^FO105,190^AD^FD'+sku+ean+'^FS^XZ'
 
             try:

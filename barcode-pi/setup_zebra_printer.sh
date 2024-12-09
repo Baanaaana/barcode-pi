@@ -10,8 +10,6 @@ while IFS= read -r printer; do
     fi
 done < <(lpstat -p | cut -d' ' -f2)
 
-echo "Setting up Zebra ZPL printer..."
-
 # Check if running as root
 if [ "$EUID" -ne 0 ]; then 
     echo "Please run as root (use sudo)"
@@ -38,69 +36,72 @@ sudo sed -i 's/Browsing Yes/Browsing No/' /etc/cups/cupsd.conf
 sudo sed -i 's/Browsing On/Browsing Off/' /etc/cups/cupsd.conf
 sudo sed -i 's/BrowseRemoteProtocols dnssd/BrowseRemoteProtocols none/' /etc/cups/cups-browsed.conf
 
-# Add network access to CUPS
-cat >> /etc/cups/cupsd.conf << EOF
-
-# Allow remote access
-<Location />
-  Order allow,deny
-  Allow @LOCAL
-</Location>
-
-<Location /admin>
-  Order allow,deny
-  Allow @LOCAL
-</Location>
-
-<Location /admin/conf>
-  AuthType Default
-  Require user @SYSTEM
-  Order allow,deny
-  Allow @LOCAL
-</Location>
-EOF
-
 # Start CUPS service
 systemctl start cups
 
 # Wait for CUPS to fully start
 sleep 5
 
-# Detect USB printer
-echo "Detecting Zebra printer..."
-PRINTER_URI=""
-while IFS= read -r line; do
-    if [[ $line == *"Zebra"* ]]; then
-        PRINTER_URI=$(echo "$line" | awk '{print $2}')
-        break
+configure_printer() {
+    # Detect USB printers
+    echo "Detecting USB printers..."
+    PRINTERS=()
+    while IFS= read -r line; do
+        if [[ $line == *"Zebra"* ]]; then
+            PRINTERS+=("$line")
+        fi
+    done < <(lpinfo -v)
+
+    if [ ${#PRINTERS[@]} -eq 0 ]; then
+        echo "Error: No Zebra printers detected via USB"
+        echo "Available devices:"
+        lpinfo -v
+        exit 1
     fi
-done < <(lpinfo -v)
 
-if [ -z "$PRINTER_URI" ]; then
-    echo "Error: No Zebra printer detected via USB"
-    echo "Available devices:"
-    lpinfo -v
-    exit 1
-fi
+    echo "Available Zebra printers:"
+    for i in "${!PRINTERS[@]}"; do
+        echo "$i) ${PRINTERS[$i]}"
+    done
 
-echo "Found printer at: $PRINTER_URI"
+    read -p "Select the printer to configure (0-${#PRINTERS[@]}): " PRINTER_INDEX
+    PRINTER_URI=$(echo "${PRINTERS[$PRINTER_INDEX]}" | awk '{print $2}')
 
-# Add Zebra ZPL printer with specific settings
-echo "Adding Zebra ZPL printer..."
-lpadmin -p ZebraZPL \
-    -E \
-    -v "$PRINTER_URI" \
-    -P /home/pi/barcode-pi/zebra.ppd \
-    -o printer-is-shared=true \
-    -o printer-error-policy=abort-job \
-    -o PageSize=w162h90 \
-    -o Resolution=203dpi
+    # Ask for label size
+    echo "Select label size for configuration:"
+    echo "1) 57x32mm (barcode label)"
+    echo "2) 150x102mm (shipping label)"
+    read -p "Enter choice (1 or 2): " LABEL_CHOICE
 
-# Set as default printer
-lpoptions -d ZebraZPL
+    if [ "$LABEL_CHOICE" -eq 1 ]; then
+        PPD_FILE="/home/pi/barcode-pi/zebra-barcode.ppd"
+        PAGE_SIZE="w57h32"
+        PRINTER_NAME="ZebraBarcode"
+    elif [ "$LABEL_CHOICE" -eq 2 ]; then
+        PPD_FILE="/home/pi/barcode-pi/zebra-shipping.ppd"
+        PAGE_SIZE="w150h102"
+        PRINTER_NAME="ZebraShipping"
+    else
+        echo "Invalid choice. Exiting."
+        exit 1
+    fi
 
-# Create test label
-cat > /tmp/test_label.zpl << EOF
+    # Add Zebra printer with specific settings
+    echo "Adding $PRINTER_NAME printer..."
+    lpadmin -p "$PRINTER_NAME" \
+        -E \
+        -v "$PRINTER_URI" \
+        -P "$PPD_FILE" \
+        -o printer-is-shared=true \
+        -o printer-error-policy=abort-job \
+        -o PageSize="$PAGE_SIZE" \
+        -o Resolution=203dpi
+
+    # Set as default printer
+    lpoptions -d "$PRINTER_NAME"
+
+    # Create test label
+    cat > /tmp/test_label.zpl << EOF
 ^XA
 ^MMT
 ^PW406
@@ -115,13 +116,23 @@ cat > /tmp/test_label.zpl << EOF
 ^XZ
 EOF
 
-# Test print the barcode
-echo "Printing test barcode..."
-lp -d ZebraZPL -o raw /tmp/test_label.zpl
+    # Test print the barcode
+    echo "Printing test barcode..."
+    lp -d "$PRINTER_NAME" -o raw /tmp/test_label.zpl
 
-echo "Printer setup complete!"
-echo "Test barcode has been sent to the printer"
-echo "You can check printer status by running: lpstat -p ZebraZPL"
+    echo "Printer setup complete!"
+    echo "Test barcode has been sent to the printer"
+    echo "You can check printer status by running: lpstat -p $PRINTER_NAME"
+}
+
+while true; do
+    configure_printer
+    read -p "Do you want to configure another printer? (y/n): " CONTINUE
+    if [[ "$CONTINUE" != "y" ]]; then
+        break
+    fi
+done
+
 echo ""
 echo "Setup complete! System will reboot in 10 seconds..."
 echo "Press Ctrl+C to cancel reboot"

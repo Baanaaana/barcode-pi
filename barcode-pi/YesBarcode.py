@@ -320,16 +320,20 @@ class MainWindow_exec(QtWidgets.QMainWindow, Ui_MainWindow):
         prodname = ''
         container = ''  # Initialize the container variable
 
-        if len(self.read_product.text()) == 0:
+        input_text = self.read_product.text().strip()  # Strip whitespace
+        if len(input_text) == 0:
             print('enter something')
             return
         else:
-            if len(self.read_product.text()) < 12:
-                try:
-                    print(self.sku_dict[self.read_product.text()])
-                    lst = self.sku_dict[self.read_product.text()]
+            # Remove non-numeric characters for processing
+            cleaned_input = ''.join(filter(str.isdigit, input_text))
 
-                    sku = self.read_product.text() + '~'
+            if len(cleaned_input) < 12:
+                try:
+                    print(self.sku_dict[cleaned_input])
+                    lst = self.sku_dict[cleaned_input]
+
+                    sku = cleaned_input + '~'
                     ean = lst[0]
                     prodname = lst[1]
 
@@ -337,25 +341,25 @@ class MainWindow_exec(QtWidgets.QMainWindow, Ui_MainWindow):
                     if len(ean) <= 11:
                         container = ean[-1]
 
-                except:
+                except KeyError:
                     print('No product for sku,return')
                     self.label_not_found.setText('Artikelnummer onbekend')
                     self.read_product.clear()
                     self.read_product.setFocus(True)
                     return
-            elif len(self.read_product.text()) >= 12:
-                if len(self.read_product.text().split('~')) > 1:
+            elif len(cleaned_input) >= 12:
+                if len(cleaned_input.split('~')) > 1:
                     print('Auto print keep ean, reprocess')
-                    self.read_product.setText(self.read_product.text().split('~')[1])
+                    cleaned_input = cleaned_input.split('~')[1]
                 try:
-                    ean = self.read_product.text()
+                    ean = cleaned_input
 
-                    print(self.ean_dict[self.read_product.text()])
-                    lst = self.ean_dict[self.read_product.text()]
+                    print(self.ean_dict[cleaned_input])
+                    lst = self.ean_dict[cleaned_input]
 
                     sku = lst[0] + '~'
                     prodname = lst[1]
-                except:
+                except KeyError:
                     print('No product for ean,continue')
                     self.label_not_found.setText('EAN niet bekend. Printen...')
             else:

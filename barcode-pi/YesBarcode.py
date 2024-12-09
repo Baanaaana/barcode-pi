@@ -320,7 +320,7 @@ class MainWindow_exec(QtWidgets.QMainWindow, Ui_MainWindow):
                     print(self.sku_dict[self.read_product.text()])
                     lst=self.sku_dict[self.read_product.text()]
                     
-                    sku=self.read_product.text()+'~'
+                    sku=self.read_product.text()+'|'
                     ean=lst[0]
                     prodname=lst[1]
                     
@@ -331,16 +331,16 @@ class MainWindow_exec(QtWidgets.QMainWindow, Ui_MainWindow):
                     self.read_product.setFocus(True)
                     return;
             elif len(self.read_product.text())>=12:
-                if len(self.read_product.text().split('~'))>1:
+                if len(self.read_product.text().split('|'))>1:
                     print('Auto print keep ean, reprocess')
-                    self.read_product.setText(self.read_product.text().split('~')[1])
+                    self.read_product.setText(self.read_product.text().split('|')[1])
                 try:
                     ean=self.read_product.text()
 
                     print(self.ean_dict[self.read_product.text()])
                     lst=self.ean_dict[self.read_product.text()]
                     
-                    sku=lst[0]+'~'
+                    sku=lst[0]+'|'
                     prodname=lst[1]
                 except:
                     print('No product for ean,continue')
@@ -377,7 +377,7 @@ class MainWindow_exec(QtWidgets.QMainWindow, Ui_MainWindow):
                         zpl = '^XA^LH0,25^FO30,10^A0,30^FD' + tlist[0] + '^FS^FO30,50^A0,30^FD' + tlist[1] + '^FS^FO340,110^A0,20^FDEAN^FS^FO30,90^BY3^BEN,60,N,N,N,N^FD' + ean + '^FS^FO30,180^A0,30^FD' + sku + '|' + ean + '^FS^XZ'
 
             print('printer command:', zpl)
-            zpl = zpl.replace('~', '-')
+            zpl = zpl.replace('|', '-')
 
             if manual_print or self.check_autoprint.isChecked():
                 for x in range(0, self.spin_copies.value()):

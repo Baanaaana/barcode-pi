@@ -327,10 +327,11 @@ class MainWindow_exec(QtWidgets.QMainWindow, Ui_MainWindow):
         else:
             # Remove non-numeric characters for processing
             cleaned_input = ''.join(filter(str.isdigit, input_text))
+            print(f"Cleaned Input: {cleaned_input}")
 
             if len(cleaned_input) < 12:
                 try:
-                    print(self.sku_dict[cleaned_input])
+                    print(f"Looking up SKU: {cleaned_input}")
                     lst = self.sku_dict[cleaned_input]
 
                     sku = cleaned_input + '~'
@@ -353,8 +354,7 @@ class MainWindow_exec(QtWidgets.QMainWindow, Ui_MainWindow):
                     cleaned_input = cleaned_input.split('~')[1]
                 try:
                     ean = cleaned_input
-
-                    print(self.ean_dict[cleaned_input])
+                    print(f"Looking up EAN: {cleaned_input}")
                     lst = self.ean_dict[cleaned_input]
 
                     sku = lst[0] + '~'
@@ -397,6 +397,8 @@ class MainWindow_exec(QtWidgets.QMainWindow, Ui_MainWindow):
                         zpl = '^XA^LH0,25^FO30,10^A0,30^FD' + tlist[0] + '^FS^FO30,50^A0,30^FD' + tlist[1] + '^FS^FO340,110^A0,20^FDUPC^FS^FO30,90^BY3^BUN,60,N,N,N,N^FD' + ean + '^FS^FO30,180^A0,30^FD' + sku + ean + '^FS^XZ'
                     else:
                         zpl = '^XA^LH0,25^FO30,10^A0,30^FD' + tlist[0] + '^FS^FO30,50^A0,30^FD' + tlist[1] + '^FS^FO340,110^A0,20^FDEAN^FS^FO30,90^BY3^BEN,60,N,N,N,N^FD' + ean + '^FS^FO30,180^A0,30^FD' + sku + ean + '^FS^XZ'
+
+            print('ZPL Command:', zpl)  # Debugging output for ZPL command
 
             try:
                 del z

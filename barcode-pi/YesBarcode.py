@@ -24,7 +24,6 @@ from PIL import Image, ImageDraw,ImageFont
 import barcode
 from barcode.writer import ImageWriter
 
-
 import os.path
 import sys
 
@@ -142,7 +141,6 @@ class zebra(object):
         self.output(commands)
         self.output(open(filename,'rb').read())
 
-
 class MainWindow_exec(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         QtWidgets.QMainWindow.__init__(self, parent)
@@ -164,21 +162,15 @@ class MainWindow_exec(QtWidgets.QMainWindow, Ui_MainWindow):
         self.check_autoprint.setChecked(self.autoprint)
 
         print( self.spin_copies.value() )
-        
+
         self.spin_copies.valueChanged.connect(self.set_copies)
         self.check_autoprint.stateChanged.connect(self.set_autoprint)
         self.combo_printers.currentIndexChanged.connect(self.change_printer)
-
 
         self.z = zebra()
 
         self.btn_refresh.clicked.connect(self.show_printer)
         self.show_printer()
-
-
-
-
-
 
         self.spin_copies.valueChanged.connect(self.set_copies)
         self.check_autoprint.stateChanged.connect(self.set_autoprint)
@@ -206,18 +198,15 @@ class MainWindow_exec(QtWidgets.QMainWindow, Ui_MainWindow):
         self.xml_timer1.timeout.connect(self.load_xml)
         self.xml_timer1.start(1000)
         self.label_not_found.setText('Producten laden...')
-        
+
         self.btn_save.clicked.connect(self.save_url)
         self.box_url.setFocusPolicy( Qt.NoFocus )
         self.box_url.installEventFilter(self)
         self.read_product.setFocus(True)
-        
-        
+
+
         if self.spin_copies.value()>1:
             self.check_autoprint.setChecked(False)
-            
-        
-            
 
     def eventFilter(self, watched, event):
         if watched == self.box_url and event.type() == QtCore.QEvent.MouseButtonDblClick:
@@ -239,20 +228,17 @@ class MainWindow_exec(QtWidgets.QMainWindow, Ui_MainWindow):
         self.xml_timer1.stop()
         self.label_not_found.setText('Producten laden...')
         QtWidgets.QApplication.processEvents() 
-        
+
         try:
             url = self.url
             r = requests.get(url, stream=True, timeout = 20)
-            
+
             with open('/home/pi/barcode-pi/barcode-label-data.xml', 'wb') as fd:
                 for chunk in r.iter_content(2000):
                     fd.write(chunk)
-            self.label_not_found.setText('Klaar!')                    
+            self.label_not_found.setText('Klaar!')
         except:
             self.label_not_found.setText('Producten laden mislukt!')
-            
-
-
 
         root = ET.parse('/home/pi/barcode-pi/barcode-label-data.xml').getroot()
         self.sku_dict={}
@@ -276,8 +262,6 @@ class MainWindow_exec(QtWidgets.QMainWindow, Ui_MainWindow):
             self.sku_dict[sku]=[barcode,prodname]
             self.ean_dict[barcode]=[sku,prodname]
 
-
-
     def closeEvent(self,event):
         sys.exit(0)
 
@@ -293,7 +277,6 @@ class MainWindow_exec(QtWidgets.QMainWindow, Ui_MainWindow):
     def set_autoprint(self):
         self.settings.setValue('autoprint',self.check_autoprint.isChecked())
         self.settings.sync()
-
 
     def keyPressEvent(self,event):
         print(event.key())
@@ -313,75 +296,76 @@ class MainWindow_exec(QtWidgets.QMainWindow, Ui_MainWindow):
             except Exception as e:
                 print('special keys',e)
 
-    def call_decode(self, manual_print=False):
+    def call_decode(self,manual_print=False):
         self.label_not_found.setText('')
-        sku = ''
-        ean = ''
-        prodname = ''
-        container = ''  # Initialize the container variable
+        sku=''
+        ean=''
+        prodname=''
 
-        input_text = self.read_product.text().strip()  # Strip whitespace
-        if len(input_text) == 0:
+        if len( self.read_product.text() )==0:
             print('enter something')
-            return
+            return;
         else:
-            # Use the original input for processing
-            cleaned_input = input_text
-            print(f"Original Input: {cleaned_input}")
-
-            if len(cleaned_input) < 12:
-                # Attempt to look up by SKU
+            if len(self.read_product.text())<12:
                 try:
-                    print(f"Looking up SKU: {cleaned_input}")
-                    lst = self.sku_dict[cleaned_input]
+                    print(self.sku_dict[self.read_product.text()])
+                    lst=self.sku_dict[self.read_product.text()]
 
-                    sku = cleaned_input + '~'
-                    ean = lst[0]
-                    prodname = lst[1]
-                except KeyError:
-                    print('No product for SKU, return')
+                    sku=self.read_product.text()+'~'
+                    ean=lst[0]
+                    prodname=lst[1]
+
+                except:
+                    print('No product for sku,return')
                     self.label_not_found.setText('Artikelnummer onbekend')
                     self.read_product.clear()
                     self.read_product.setFocus(True)
-                    return
-            else:
-                # Attempt to look up by EAN
-                if len(cleaned_input.split('~')) > 1:
+                    return;
+            elif len(self.read_product.text())>=12:
+                if len(self.read_product.text().split('~'))>1:
                     print('Auto print keep ean, reprocess')
-                    cleaned_input = cleaned_input.split('~')[1]
+                    self.read_product.setText(self.read_product.text().split('~')[1])
                 try:
-                    ean = cleaned_input
-                    print(f"Looking up EAN: {cleaned_input}")
-                    lst = self.ean_dict[cleaned_input]
+                    ean=self.read_product.text()
 
-                    sku = lst[0] + '~'
-                    prodname = lst[1]
-                except KeyError:
-                    print('No product for EAN, continue')
+                    print(self.ean_dict[self.read_product.text()])
+                    lst=self.ean_dict[self.read_product.text()]
+
+                    sku=lst[0]+'~'
+                    prodname=lst[1]
+                except:
+                    print('No product for ean,continue')
                     self.label_not_found.setText('EAN niet bekend. Printen...')
-                    return
+            else:
+                print('Minimaal 6 of maximaal 13 tekens')
+                self.label_not_found.setText('Minimaal 6 of maximaal 13 tekens')
+                self.read_product.clear()
+                return;
 
-            if prodname is None:
-                prodname = ''
+            if prodname==None:
+                prodname=''
 
-            print('SKU:', sku)
-            print('EAN:', ean)
-            print('PRD:', prodname)
-            print('Container:', container)  # Print the container for debugging
+            print('SKU:',sku)
+            print('EAN:',ean)
+            print('PRD:',prodname)
 
-            self.read_product.setText(sku + ean)
+            self.read_product.setText(sku+ean)
             QtWidgets.QApplication.processEvents()
 
-            # Existing label layout logic
-            if len(prodname) <= 28:
-                if 'ZebraBarcode' in self.combo_printers.currentText():
-                    zpl = '^XA^LH0,20^FO30,20^A0,30^FD' + prodname + '^FS^FO30,60^BY3^BEN,60,N,N,N,N^FD' + ean + '^FS^FO30,150^A0,30^FD' + sku + ean + '^FS^XZ'
-            else:
-                tlist = textwrap.fill(prodname, 28).split('\n')
-                if 'ZebraBarcode' in self.combo_printers.currentText():
-                    zpl = '^XA^LH0,25^FO30,10^A0,30^FD' + tlist[0] + '^FS^FO30,50^A0,30^FD' + tlist[1] + '^FS^FO30,90^BY3^BEN,60,N,N,N,N^FD' + ean + '^FS^FO30,180^A0,30^FD' + sku + ean + '^FS^XZ'
 
-            print('ZPL Command:', zpl)  # Debugging output for ZPL command
+            if len(prodname)<=28:
+                if 'ZebraBarcode' in self.combo_printers.currentText():
+                   if len(ean) == 12:
+                       zpl='^XA^LH0,20^FO30,20^A0,30^FD'+prodname+'^FS^FO340,80^A0,20^FDUPC^FS^FO30,60^BY3^BUN,60,N,N,N,N^FD'+ean+'^FS^FO30,150^A0,30^FD'+sku+ean+'^FS^XZ'
+                   else:
+                       zpl='^XA^LH0,20^FO30,20^A0,30^FD'+prodname+'^FS^FO340,80^A0,20^FDEAN^FS^FO30,60^BY3^BEN,60,N,N,N,N^FD'+ean+'^FS^FO30,150^A0,30^FD'+sku+ean+'^FS^XZ'
+            else:
+                tlist=textwrap.fill(prodname, 28).split('\n')
+                if 'ZebraBarcode' in self.combo_printers.currentText():
+                   if len(ean) == 12:
+                       zpl='^XA^LH0,25^FO30,10^A0,30^FD'+tlist[0]+'^FS^FO30,50^A0,30^FD'+tlist[1]+'^FS^FO340,110^A0,20^FDUPC^FS^FO30,90^BY3^BUN,60,N,N,N,N^FD'+ean+'^FS^FO30,180^A0,30^FD'+sku+ean+'^FS^XZ'
+                   else:
+                       zpl='^XA^LH0,25^FO30,10^A0,30^FD'+tlist[0]+'^FS^FO30,50^A0,30^FD'+tlist[1]+'^FS^FO340,110^A0,20^FDEAN^FS^FO30,90^BY3^BEN,60,N,N,N,N^FD'+ean+'^FS^FO30,180^A0,30^FD'+sku+ean+'^FS^XZ'
 
             try:
                 del z
@@ -474,7 +458,7 @@ class MainWindow_exec(QtWidgets.QMainWindow, Ui_MainWindow):
         self.z.setqueue( self.combo_printers.currentText() )
         self.setFocus(True)
 
-        
+
     def show_printer(self):
 
         self.combo_printers.blockSignals(True)
@@ -483,7 +467,7 @@ class MainWindow_exec(QtWidgets.QMainWindow, Ui_MainWindow):
         self.combo_printers.setCurrentText   ( self.settings.value('default_printer','') )
         self.combo_printers.blockSignals(False)
 
-        
+
 if __name__ == '__main__':
     freeze_support()
 
@@ -508,7 +492,3 @@ if __name__ == '__main__':
     MainWindow1 = MainWindow_exec()
     MainWindow1.showFullScreen()
     sys.exit(app.exec_())
-
-
-
-

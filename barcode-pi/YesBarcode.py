@@ -370,7 +370,7 @@ class MainWindow_exec(QtWidgets.QMainWindow, Ui_MainWindow):
             QtWidgets.QApplication.processEvents()
 
               
-            if len(prodname)<=24:
+            if len(prodname)<=28:
                 if 'ZebraBarcode' in self.combo_printers.currentText():
                    zpl='^XA^LH0,20^FO30,20^A0,30^FD'+prodname+'^FS^FO30,60^BY3^BEN,60,N,N,N,N^FD'+ean+'^FS^FO30,150^A0,30^FD'+sku+ean+'^FS^XZ'
             else:

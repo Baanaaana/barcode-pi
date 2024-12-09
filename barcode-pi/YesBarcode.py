@@ -6,7 +6,7 @@ import requests
 import os
 os.system('pyuic5 -x neo_bar.ui -o neo_bar.py')
 import sys
-from PyQt5 import QtWidgets, QtCore
+from PyQt5 import QtWidgets, QtGui, QtCore
 from PyQt5.QtCore import Qt
 from neo_bar import Ui_MainWindow
 from multiprocessing import freeze_support

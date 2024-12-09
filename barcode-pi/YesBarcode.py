@@ -313,7 +313,7 @@ class MainWindow_exec(QtWidgets.QMainWindow, Ui_MainWindow):
             except Exception as e:
                 print('special keys',e)
 
-    def call_decode(self,manual_print=False):
+    def call_decode(self, manual_print=False):
         self.label_not_found.setText('')
         sku=''
         ean=''
@@ -370,81 +370,19 @@ class MainWindow_exec(QtWidgets.QMainWindow, Ui_MainWindow):
             QtWidgets.QApplication.processEvents()
 
               
-            if len(prodname)<=28:
+            if len(prodname) <= 28:
                 if 'ZebraBarcode' in self.combo_printers.currentText():
-                   if len(ean) == 12:
-                       zpl='^XA^LH0,20^FO30,20^A0,30^FD'+prodname+'^FS^FO340,80^A0,20^FDUPC^FS^FO30,60^BY3^BUN,60,N,N,N,N^FD'+ean+'^FS^FO30,150^A0,30^FD'+sku+ean+'^FS^XZ'
-                   else:
-                       zpl='^XA^LH0,20^FO30,20^A0,30^FD'+prodname+'^FS^FO340,80^A0,20^FDEAN^FS^FO30,60^BY3^BEN,60,N,N,N,N^FD'+ean+'^FS^FO30,150^A0,30^FD'+sku+ean+'^FS^XZ'
+                    if len(ean) == 12:
+                        zpl = '^XA^LH0,20^FO30,20^A0,30^FD' + prodname + '^FS^FO340,80^A0,20^FDUPC^FS^FO30,60^BY3^BUN,60,N,N,N,N^FD' + ean + '^FS^FO30,150^A0,30^FD' + sku + ean + '^FS^XZ'
+                    else:
+                        zpl = '^XA^LH0,20^FO30,20^A0,30^FD' + prodname + '^FS^FO340,80^A0,20^FDEAN^FS^FO30,60^BY3^BEN,60,N,N,N,N^FD' + ean + '^FS^FO30,150^A0,30^FD' + sku + ean + '^FS^XZ'
             else:
-                tlist=textwrap.fill(prodname, 28).split('\n')
+                tlist = textwrap.fill(prodname, 28).split('\n')
                 if 'ZebraBarcode' in self.combo_printers.currentText():
-                   if len(ean) == 12:
-                       zpl='^XA^LH0,25^FO30,10^A0,30^FD'+tlist[0]+'^FS^FO30,50^A0,30^FD'+tlist[1]+'^FS^FO340,110^A0,20^FDUPC^FS^FO30,90^BY3^BUN,60,N,N,N,N^FD'+ean+'^FS^FO30,180^A0,30^FD'+sku+ean+'^FS^XZ'
-                   else:
-                       zpl='^XA^LH0,25^FO30,10^A0,30^FD'+tlist[0]+'^FS^FO30,50^A0,30^FD'+tlist[1]+'^FS^FO340,110^A0,20^FDEAN^FS^FO30,90^BY3^BEN,60,N,N,N,N^FD'+ean+'^FS^FO30,180^A0,30^FD'+sku+ean+'^FS^XZ'
-
-            try:
-                del z
-            except:
-                None
-
-            try:
-                EAN = barcode.get_barcode_class('ean13')
-                UPC = barcode.get_barcode_class('upc')
-
-                EAN.default_writer_options['write_text'] = False
-                UPC.default_writer_options['write_text'] = False
-
-                if len(ean) == 12:
-                    o_barcode = UPC(ean, writer=ImageWriter())
-                else:
-                    o_barcode = EAN(ean, writer=ImageWriter())
-
-                pil = o_barcode.render()
-
-                if len(prodname) <= 24:
-                    img_w, img_h = pil.size
-                    background = Image.new('RGBA', (img_w, img_h + 100), (255, 255, 255, 255))
-                    bg_w, bg_h = background.size
-                    offset = ((bg_w - img_w) // 2, ((bg_h - img_h) // 2) - 10)
-                    background.paste(pil, offset)
-
-                    img_draw = ImageDraw.Draw(background)
-                    font = ImageFont.truetype('FreeSans.ttf', 30)
-                    img_draw.text((75, 10), prodname, fill='black', font=font)
-                    img_draw.text((100, 240), sku + ean, fill='black', font=font)
-                else:
-                    img_w, img_h = pil.size
-                    background = Image.new('RGBA', (img_w, img_h + 100), (255, 255, 255, 255))
-                    bg_w, bg_h = background.size
-                    offset = ((bg_w - img_w) // 2, ((bg_h - img_h) // 2) + 20)
-                    background.paste(pil, offset)
-
-                    tlist = textwrap.fill(prodname, 24).split('\n')
-                    img_draw = ImageDraw.Draw(background)
-                    font = ImageFont.truetype("FreeSans.ttf", 30)
-                    img_draw.text((75, 10), tlist[0], fill='black', font=font)
-                    img_draw.text((75, 40), tlist[1], fill='black', font=font)
-                    img_draw.text((100, 260), sku + ean, fill='black', font=font)
-
-                background = background.filter(ImageFilter.SHARPEN)
-                background = background.filter(ImageFilter.SHARPEN)
-
-                background = background.convert("RGBA")
-                data = background.tobytes("raw", "RGBA")
-                qim = QtGui.QImage(data, background.size[0], background.size[1], QtGui.QImage.Format_RGBA8888)
-                pix = QtGui.QPixmap.fromImage(qim)
-                self.label_barcode.setPixmap(pix)
-                self.label_barcode.update_label()
-
-            except Exception as e:
-                print('label update failed:', e)
-                import traceback
-
-                print(traceback.format_exc())
-
-            QtWidgets.QApplication.processEvents()
+                    if len(ean) == 12:
+                        zpl = '^XA^LH0,25^FO30,10^A0,30^FD' + tlist[0] + '^FS^FO30,50^A0,30^FD' + tlist[1] + '^FS^FO340,110^A0,20^FDUPC^FS^FO30,90^BY3^BUN,60,N,N,N,N^FD' + ean + '^FS^FO30,180^A0,30^FD' + sku + ean + '^FS^XZ'
+                    else:
+                        zpl = '^XA^LH0,25^FO30,10^A0,30^FD' + tlist[0] + '^FS^FO30,50^A0,30^FD' + tlist[1] + '^FS^FO340,110^A0,20^FDEAN^FS^FO30,90^BY3^BEN,60,N,N,N,N^FD' + ean + '^FS^FO30,180^A0,30^FD' + sku + ean + '^FS^XZ'
 
             print('printer command:', zpl)
             zpl = zpl.replace('~', '-')

@@ -365,7 +365,7 @@ class MainWindow_exec(QtWidgets.QMainWindow, Ui_MainWindow):
             if len(prodname) <= 28:
                 if 'ZebraBarcode' in self.combo_printers.currentText():
                     if len(ean) <= 11:
-                        zpl = '^XA^LH0,25^FO30,0^A0,60^FD' + ean + '^FS^FO50,60^BQN,2,8^FDMA,' + ean + '^FS^FO280,80^A0,120^FD' + container + '^FS^XZ'
+                        zpl = '^XA^LH0,25^FO30,0^A0,60^FD' + ean + '^FS^FO50,20^BQN,2,8^FDMA,' + ean + '^FS^FO280,100^A0,120^FD' + container + '^FS^XZ'
                     elif len(ean) == 12:
                         zpl = '^XA^LH0,20^FO30,20^A0,30^FD' + prodname + '^FS^FO340,80^A0,20^FDUPC^FS^FO30,60^BY3^BUN,60,N,N,N,N^FD' + ean + '^FS^FO30,150^A0,30^FD' + sku + ean + '^FS^XZ'
                     else:
@@ -374,7 +374,7 @@ class MainWindow_exec(QtWidgets.QMainWindow, Ui_MainWindow):
                 tlist = textwrap.fill(prodname, 28).split('\n')
                 if 'ZebraBarcode' in self.combo_printers.currentText():
                     if len(ean) <= 11:
-                        zpl = '^XA^LH0,25^FO30,0^A0,60^FD' + ean + '^FS^FO50,60^BQN,2,8^FDMA,' + ean + '^FS^FO280,80^A0,120^FD' + container + '^FS^XZ'
+                        zpl = '^XA^LH0,25^FO30,0^A0,60^FD' + ean + '^FS^FO50,20^BQN,2,8^FDMA,' + ean + '^FS^FO280,100^A0,120^FD' + container + '^FS^XZ'
                     elif len(ean) == 12:
                         zpl = '^XA^LH0,25^FO30,10^A0,30^FD' + tlist[0] + '^FS^FO30,50^A0,30^FD' + tlist[1] + '^FS^FO340,110^A0,20^FDUPC^FS^FO30,90^BY3^BUN,60,N,N,N,N^FD' + ean + '^FS^FO30,180^A0,30^FD' + sku + ean + '^FS^XZ'
                     else:

@@ -62,12 +62,6 @@
         <height>200</height>
        </size>
       </property>
-      <property name="font">
-       <font>
-        <family>Arial</family>
-        <pointsize>16</pointsize>
-       </font>
-      </property>
       <layout class="QGridLayout" name="gridLayout_6">
        <item row="0" column="1">
         <widget class="scaledlabel" name="label_barcode" native="true">
@@ -89,12 +83,6 @@
            <height>180</height>
           </size>
          </property>
-         <property name="font">
-          <font>
-           <family>Arial</family>
-           <pointsize>16</pointsize>
-          </font>
-         </property>
          <widget class="QWidget" name="widget_7" native="true">
           <property name="geometry">
            <rect>
@@ -109,12 +97,6 @@
             <horstretch>4</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
-          </property>
-          <property name="font">
-           <font>
-            <family>Arial</family>
-            <pointsize>16</pointsize>
-           </font>
           </property>
           <layout class="QGridLayout" name="gridLayout_8"/>
          </widget>
@@ -139,12 +121,6 @@
            <width>510</width>
            <height>180</height>
           </size>
-         </property>
-         <property name="font">
-          <font>
-           <family>Arial</family>
-           <pointsize>16</pointsize>
-          </font>
          </property>
          <widget class="QPushButton" name="btn_print">
           <property name="geometry">
@@ -175,8 +151,9 @@
           </property>
           <property name="font">
            <font>
-            <family>Arial</family>
+            <family>FreeSans</family>
             <pointsize>24</pointsize>
+            <weight>75</weight>
             <bold>true</bold>
            </font>
           </property>
@@ -219,8 +196,9 @@
           </property>
           <property name="font">
            <font>
-            <family>Arial</family>
+            <family>FreeSans</family>
             <pointsize>80</pointsize>
+            <weight>75</weight>
             <bold>true</bold>
            </font>
           </property>
@@ -235,10 +213,10 @@ QSpinBox::down-button{width:50px}</string>
            <bool>true</bool>
           </property>
           <property name="alignment">
-           <set>Qt::AlignmentFlag::AlignCenter</set>
+           <set>Qt::AlignCenter</set>
           </property>
           <property name="buttonSymbols">
-           <enum>QAbstractSpinBox::ButtonSymbols::UpDownArrows</enum>
+           <enum>QAbstractSpinBox::UpDownArrows</enum>
           </property>
           <property name="minimum">
            <number>1</number>
@@ -279,8 +257,9 @@ QSpinBox::down-button{width:50px}</string>
           </property>
           <property name="font">
            <font>
-            <family>Arial</family>
+            <family>FreeSans</family>
             <pointsize>10</pointsize>
+            <weight>50</weight>
             <bold>false</bold>
            </font>
           </property>
@@ -318,8 +297,9 @@ QSpinBox::down-button{width:50px}</string>
          </property>
          <property name="font">
           <font>
-           <family>Arial</family>
+           <family>FreeSans</family>
            <pointsize>10</pointsize>
+           <weight>50</weight>
            <bold>false</bold>
           </font>
          </property>
@@ -327,16 +307,16 @@ QSpinBox::down-button{width:50px}</string>
           <string notr="true">color:#444444</string>
          </property>
          <property name="frameShape">
-          <enum>QFrame::Shape::NoFrame</enum>
+          <enum>QFrame::NoFrame</enum>
          </property>
          <property name="frameShadow">
-          <enum>QFrame::Shadow::Plain</enum>
+          <enum>QFrame::Plain</enum>
          </property>
          <property name="text">
           <string/>
          </property>
          <property name="alignment">
-          <set>Qt::AlignmentFlag::AlignCenter</set>
+          <set>Qt::AlignCenter</set>
          </property>
         </widget>
        </item>
@@ -365,7 +345,6 @@ QSpinBox::down-button{width:50px}</string>
       </property>
       <property name="font">
        <font>
-        <family>Arial</family>
         <pointsize>14</pointsize>
        </font>
       </property>
@@ -401,8 +380,9 @@ QSpinBox::down-button{width:50px}</string>
        </property>
        <property name="font">
         <font>
-         <family>Arial</family>
+         <family>FreeSans</family>
          <pointsize>42</pointsize>
+         <weight>50</weight>
          <italic>false</italic>
          <bold>false</bold>
          <strikeout>false</strikeout>
@@ -410,7 +390,7 @@ QSpinBox::down-button{width:50px}</string>
         </font>
        </property>
        <property name="contextMenuPolicy">
-        <enum>Qt::ContextMenuPolicy::NoContextMenu</enum>
+        <enum>Qt::NoContextMenu</enum>
        </property>
        <property name="text">
         <string/>
@@ -425,13 +405,13 @@ QSpinBox::down-button{width:50px}</string>
         <number>0</number>
        </property>
        <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
        </property>
        <property name="readOnly">
         <bool>false</bool>
        </property>
        <property name="placeholderText">
-        <string>  EAN / UPC / SKU</string>
+        <string>EAN / UPC / SKU</string>
        </property>
       </widget>
      </widget>
@@ -456,12 +436,6 @@ QSpinBox::down-button{width:50px}</string>
         <height>50</height>
        </size>
       </property>
-      <property name="font">
-       <font>
-        <family>Arial</family>
-        <pointsize>16</pointsize>
-       </font>
-      </property>
       <layout class="QGridLayout" name="gridLayout_2">
        <item row="0" column="1">
         <widget class="QWidget" name="widget_3" native="true">
@@ -482,12 +456,6 @@ QSpinBox::down-button{width:50px}</string>
            <width>380</width>
            <height>40</height>
           </size>
-         </property>
-         <property name="font">
-          <font>
-           <family>Arial</family>
-           <pointsize>16</pointsize>
-          </font>
          </property>
          <widget class="QLineEdit" name="box_url">
           <property name="geometry">
@@ -518,8 +486,9 @@ QSpinBox::down-button{width:50px}</string>
           </property>
           <property name="font">
            <font>
-            <family>Arial</family>
+            <family>FreeSans</family>
             <pointsize>10</pointsize>
+            <weight>50</weight>
             <italic>false</italic>
             <bold>false</bold>
            </font>
@@ -554,8 +523,9 @@ QSpinBox::down-button{width:50px}</string>
           </property>
           <property name="font">
            <font>
-            <family>Arial</family>
+            <family>FreeSans</family>
             <pointsize>12</pointsize>
+            <weight>75</weight>
             <bold>true</bold>
            </font>
           </property>
@@ -591,12 +561,6 @@ QSpinBox::down-button{width:50px}</string>
            <height>40</height>
           </size>
          </property>
-         <property name="font">
-          <font>
-           <family>Arial</family>
-           <pointsize>16</pointsize>
-          </font>
-         </property>
          <widget class="QComboBox" name="combo_printers">
           <property name="geometry">
            <rect>
@@ -626,8 +590,9 @@ QSpinBox::down-button{width:50px}</string>
           </property>
           <property name="font">
            <font>
-            <family>Arial</family>
+            <family>FreeSans</family>
             <pointsize>10</pointsize>
+            <weight>50</weight>
             <bold>false</bold>
            </font>
           </property>
@@ -664,8 +629,8 @@ QSpinBox::down-button{width:50px}</string>
           </property>
           <property name="font">
            <font>
-            <family>Arial</family>
             <pointsize>30</pointsize>
+            <weight>75</weight>
             <bold>true</bold>
            </font>
           </property>

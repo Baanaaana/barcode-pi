@@ -151,7 +151,7 @@
           </property>
           <property name="font">
            <font>
-            <family>Arial</family>
+            <family>FreeSans</family>
             <pointsize>24</pointsize>
             <weight>75</weight>
             <bold>true</bold>
@@ -196,7 +196,7 @@
           </property>
           <property name="font">
            <font>
-            <family>Arial</family>
+            <family>FreeSans</family>
             <pointsize>80</pointsize>
             <weight>75</weight>
             <bold>true</bold>
@@ -257,10 +257,10 @@ QSpinBox::down-button{width:50px}</string>
           </property>
           <property name="font">
            <font>
-            <family>Arial</family>
+            <family>FreeSans</family>
             <pointsize>10</pointsize>
             <weight>50</weight>
-            <bold>true</bold>
+            <bold>false</bold>
            </font>
           </property>
           <property name="styleSheet">
@@ -297,10 +297,10 @@ QSpinBox::down-button{width:50px}</string>
          </property>
          <property name="font">
           <font>
-           <family>Arial</family>
+           <family>FreeSans</family>
            <pointsize>10</pointsize>
            <weight>50</weight>
-           <bold>true</bold>
+           <bold>false</bold>
           </font>
          </property>
          <property name="styleSheet">
@@ -380,11 +380,11 @@ QSpinBox::down-button{width:50px}</string>
        </property>
        <property name="font">
         <font>
-         <family>Arial</family>
+         <family>FreeSans</family>
          <pointsize>42</pointsize>
          <weight>50</weight>
          <italic>false</italic>
-         <bold>true</bold>
+         <bold>false</bold>
          <strikeout>false</strikeout>
          <kerning>false</kerning>
         </font>
@@ -411,7 +411,7 @@ QSpinBox::down-button{width:50px}</string>
         <bool>false</bool>
        </property>
        <property name="placeholderText">
-        <string>  EAN / UPC / SKU</string>
+        <string>EAN / UPC / SKU</string>
        </property>
       </widget>
      </widget>
@@ -486,11 +486,11 @@ QSpinBox::down-button{width:50px}</string>
           </property>
           <property name="font">
            <font>
-            <family>Arial</family>
+            <family>FreeSans</family>
             <pointsize>10</pointsize>
             <weight>50</weight>
             <italic>false</italic>
-            <bold>true</bold>
+            <bold>false</bold>
            </font>
           </property>
          </widget>
@@ -523,7 +523,7 @@ QSpinBox::down-button{width:50px}</string>
           </property>
           <property name="font">
            <font>
-            <family>Arial</family>
+            <family>FreeSans</family>
             <pointsize>12</pointsize>
             <weight>75</weight>
             <bold>true</bold>
@@ -590,10 +590,10 @@ QSpinBox::down-button{width:50px}</string>
           </property>
           <property name="font">
            <font>
-            <family>Arial</family>
+            <family>FreeSans</family>
             <pointsize>10</pointsize>
             <weight>50</weight>
-            <bold>true</bold>
+            <bold>false</bold>
            </font>
           </property>
           <property name="cursor">

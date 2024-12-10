@@ -8,7 +8,7 @@ os.system('pyuic5 -x neo_bar.ui -o neo_bar.py')
 import sys
 from PyQt5 import QtWidgets, QtGui, QtCore
 from PyQt5.QtCore import Qt
-from neo_bar import Ui_MainWindow
+from MainWindowWrapper import MainWindowWrapper
 from multiprocessing import freeze_support
 from PyQt5.QtCore import pyqtSlot, QThread, pyqtSignal
 
@@ -135,7 +135,7 @@ class zebra(object):
         self.output(open(filename,'rb').read())
 
 
-class MainWindow_exec(QtWidgets.QMainWindow, Ui_MainWindow):
+class MainWindow_exec(QtWidgets.QMainWindow, MainWindowWrapper):
     def __init__(self, parent=None):
         QtWidgets.QMainWindow.__init__(self, parent)
         self.setupUi(self)

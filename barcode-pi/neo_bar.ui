@@ -430,7 +430,10 @@ QSpinBox::down-button{width:50px}</string>
        </property>
        <property name="font">
         <font>
-         <family>FreeSans</family>
+         <family>Arial</family>
+         <pointsize>10</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
         </font>
        </property>
        <property name="text">

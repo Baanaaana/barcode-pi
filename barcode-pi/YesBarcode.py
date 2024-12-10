@@ -404,8 +404,8 @@ class MainWindow_exec(QtWidgets.QMainWindow, Ui_MainWindow):
         container = ean[-1]  # Last digit as container
         zpl = (
             '^XA^LH0,25^FO30,0^A0,60^FD' + ean +
-            '^FS^FO50,20^BQN,2,6^FDMA,' + ean +
-            '^FS^FO280,100^A0,120^FD' + container +
+            '^FS^FO50,10^BQN,2,6^FDMA,' + ean +
+            '^FS^FO280,90^CFB,100^FD' + container +
             '^FS^XZ'
         )
         print('QR printer command:', zpl)

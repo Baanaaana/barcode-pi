@@ -402,12 +402,8 @@ class MainWindow_exec(QtWidgets.QMainWindow, Ui_MainWindow):
     def print_qr_barcode(self, ean, manual_print):
         """Print a QR barcode for 11-digit input."""
         container = ean[-1]  # Last digit as container
-        zpl = (
-            '^XA^LH0,25^FO30,0^A0,60^FD' + ean +
-            '^FS^FO50,10^BQN,2,6^FDMA,' + ean +
-            '^FS^FO280,90^CFB,100^FD' + container +
-            '^FS^XZ'
-        )
+        zpl = '^XA^FWN^LH0,25^FO30,0^A0,60^FD' + ean + '^FS^FO50,80^BQN,2,6^FDMA,' + ean + '^FS^FO280,80^CFB,100^FD' + container + '^FS^XZ'
+        
         print('QR printer command:', zpl)
 
         if manual_print or self.check_autoprint.isChecked():

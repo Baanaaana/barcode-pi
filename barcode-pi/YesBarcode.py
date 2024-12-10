@@ -307,13 +307,16 @@ class MainWindow_exec(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def call_decode(self, manual_print=False):
         self.label_not_found.setText('')
-        sku=''
-        ean=''
-        prodname=''
-        
-        if len( self.read_product.text() )==0:
+        sku = ''
+        ean = ''
+        prodname = ''
+
+        if len(self.read_product.text()) == 0:
             print('enter something')
-            return;
+            return
+        elif len(self.read_product.text()) == 11:
+            self.print_qr_barcode(self.read_product.text(), manual_print)
+            return
         else:
             if len(self.read_product.text())<12:
                 try:
@@ -395,6 +398,34 @@ class MainWindow_exec(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.label_barcode.update_label()
                 self.spin_copies.setValue(1)
             self.read_product.setFocus(True)
+
+    def print_qr_barcode(self, ean, manual_print):
+        """Print a QR barcode for 11-digit input."""
+        container = ean[-1]  # Last digit as container
+        zpl = (
+            '^XA^LH0,25^FO30,0^A0,60^FD' + ean +
+            '^FS^FO50,20^BQN,2,6^FDMA,' + ean +
+            '^FS^FO280,100^A0,120^FD' + container +
+            '^FS^XZ'
+        )
+        print('QR printer command:', zpl)
+
+        if manual_print or self.check_autoprint.isChecked():
+            for x in range(0, self.spin_copies.value()):
+                z = zebra()
+                print('Printer queues found:', z.getqueues())
+                z.setqueue(self.combo_printers.currentText())
+                z.setup(direct_thermal=True, label_height=(256, 32), label_width=456)
+                z.output(zpl)
+                print(zpl)
+        else:
+            print('Printing disabled')
+
+        self.read_product.clear()
+        self.label_barcode.setPixmap(QtGui.QPixmap("/home/pi/barcode-pi/label.png"))
+        self.label_barcode.update_label()
+        self.spin_copies.setValue(1)
+        self.read_product.setFocus(True)
 
     def start_printing(self):
         print(self.read_ean.text())

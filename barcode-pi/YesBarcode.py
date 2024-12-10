@@ -314,7 +314,7 @@ class MainWindow_exec(QtWidgets.QMainWindow, Ui_MainWindow):
         if len(self.read_product.text()) == 0:
             print('enter something')
             return
-        elif len(self.read_product.text()) == 11:
+        elif self.read_product.text().count('-') == 3:
             self.print_qr_barcode(self.read_product.text(), manual_print)
             return
         else:

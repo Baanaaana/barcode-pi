@@ -422,7 +422,7 @@ QSpinBox::down-button{width:50px}</string>
       <widget class="QLabel" name="label">
        <property name="geometry">
         <rect>
-         <x>20</x>
+         <x>24</x>
          <y>0</y>
          <width>91</width>
          <height>29</height>
@@ -437,7 +437,7 @@ QSpinBox::down-button{width:50px}</string>
         </font>
        </property>
        <property name="text">
-        <string>v1.5.0</string>
+        <string>v1.5.1</string>
        </property>
       </widget>
      </widget>

@@ -395,7 +395,7 @@ class MainWindow_exec(QtWidgets.QMainWindow, Ui_MainWindow):
             if manual_print or self.check_autoprint.isChecked():
                 self.read_product.clear()
                 self.label_barcode.setPixmap(QtGui.QPixmap("/home/pi/barcode-pi/product-barcode.png"))
-                # self.label_barcode.update_label()
+                self.label_barcode.update_label()
                 self.spin_copies.setValue(1)
             self.read_product.setFocus(True)
 
@@ -419,7 +419,7 @@ class MainWindow_exec(QtWidgets.QMainWindow, Ui_MainWindow):
 
         self.read_product.clear()
         self.label_barcode.setPixmap(QtGui.QPixmap("/home/pi/barcode-pi/location-qrcode.png"))
-        # self.label_barcode.update_label()
+        self.label_barcode.update_label()
         self.spin_copies.setValue(1)
         self.read_product.setFocus(True)
 

@@ -132,16 +132,42 @@ EOF
         exit 1
     fi
 
-    # Add Zebra printer with RAW settings
-    echo "Adding $PRINTER_NAME printer..."
-    lpadmin -p "$PRINTER_NAME" \
-        -E \
-        -v "$PRINTER_URI" \
-        -o printer-is-shared=true \
-        -o printer-error-policy=abort-job \
-        -o PageSize="$PAGE_SIZE" \
-        -o Resolution=203dpi \
-        -o raw
+    # Ask user if they want to use a PPD file or configure as RAW
+    echo "Choose printer configuration method:"
+    echo "1) Use PPD file"
+    echo "2) Configure as RAW"
+    read -p "Enter choice (1 or 2): " CONFIG_CHOICE
+
+    if [ "$CONFIG_CHOICE" -eq 1 ]; then
+        if [ "$LABEL_CHOICE" -eq 1 ]; then
+            PPD_FILE="/home/pi/barcode-pi/zebra-barcode.ppd"
+        elif [ "$LABEL_CHOICE" -eq 2 ]; then
+            PPD_FILE="/home/pi/barcode-pi/zebra-shipping.ppd"
+        fi
+        # Add Zebra printer with PPD file
+        echo "Adding $PRINTER_NAME printer with PPD file..."
+        lpadmin -p "$PRINTER_NAME" \
+            -E \
+            -v "$PRINTER_URI" \
+            -P "$PPD_FILE" \
+            -o printer-is-shared=true \
+            -o printer-error-policy=abort-job \
+            -o PageSize="$PAGE_SIZE" \
+            -o Resolution=203dpi
+    elif [ "$CONFIG_CHOICE" -eq 2 ]; then
+        # Add Zebra printer as RAW
+        PRINTER_NAME="${PRINTER_NAME}RAW"
+        echo "Adding $PRINTER_NAME printer as RAW..."
+        lpadmin -p "$PRINTER_NAME" \
+            -E \
+            -v "$PRINTER_URI" \
+            -m raw \
+            -o printer-is-shared=true \
+            -o printer-error-policy=abort-job
+    else
+        echo "Invalid choice. Exiting."
+        exit 1
+    fi
 
     # Set as default printer
     lpoptions -d "$PRINTER_NAME"

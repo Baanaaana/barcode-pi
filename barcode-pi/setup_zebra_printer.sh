@@ -74,7 +74,6 @@ configure_printer() {
     read -p "Enter choice (1 or 2): " LABEL_CHOICE
 
     if [ "$LABEL_CHOICE" -eq 1 ]; then
-        PPD_FILE="/home/pi/barcode-pi/zebra-barcode.ppd"
         PAGE_SIZE="w162h90"
         PRINTER_NAME="ZebraBarcode"
         # Create test label for barcode printer
@@ -88,7 +87,6 @@ configure_printer() {
 ^XZ
 EOF
     elif [ "$LABEL_CHOICE" -eq 2 ]; then
-        PPD_FILE="/home/pi/barcode-pi/zebra-shipping.ppd"
         PAGE_SIZE="w432h288"
         PRINTER_NAME="ZebraShipping"
         # Create test label for shipping printer
@@ -134,16 +132,16 @@ EOF
         exit 1
     fi
 
-    # Add Zebra printer with specific settings
+    # Add Zebra printer with RAW settings
     echo "Adding $PRINTER_NAME printer..."
     lpadmin -p "$PRINTER_NAME" \
         -E \
         -v "$PRINTER_URI" \
-        -P "$PPD_FILE" \
         -o printer-is-shared=true \
         -o printer-error-policy=abort-job \
         -o PageSize="$PAGE_SIZE" \
-        -o Resolution=203dpi
+        -o Resolution=203dpi \
+        -o raw
 
     # Set as default printer
     lpoptions -d "$PRINTER_NAME"

@@ -9,7 +9,7 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 # Download PrintNode client
-PRINTNODE_URL="https://dl.printnode.com/client/printnode/4.28.3/PrintNode-4.28.3-pi-bookworm-aarch64.tar.gz"
+PRINTNODE_URL="https://dl.printnode.com/client/printnode/4.28.14/PrintNode-4.28.14-pi-bookworm-aarch64.tar.gz" # Published: 2025-04-23
 if ! wget "$PRINTNODE_URL" -O printnode.tar.gz; then
     echo "Error: Failed to download PrintNode client"
     echo "Please check if the URL is accessible: $PRINTNODE_URL"

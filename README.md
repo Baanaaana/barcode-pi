@@ -20,9 +20,9 @@ A Python-based application for printing barcode labels using a Zebra ZPL printer
 - PrintNode account (for remote printing)
 
 ## Quick Installation
-Install the application with a single command:
+Install and configure the application using the installation menu:
 ```bash
-curl -sSL https://raw.githubusercontent.com/Baanaaana/barcode-pi/main/install_barcode_app.sh | bash
+curl -sSL https://raw.githubusercontent.com/Baanaaana/barcode-pi/main/install_menu.sh | sudo bash
 ```
 
 This will:
@@ -58,10 +58,11 @@ The system includes support for Zebra ZPL label printers. To set up the printers
 
 1. Connect the Zebra ZPL printers to your Raspberry Pi via USB.
 
-2. Run the printer setup script:
+2. Run the installation menu:
 ```bash
-cd ~/barcode-pi && sudo ./setup_zebra_printer.sh
+cd ~ && sudo ./install_menu.sh
 ```
+Then select option 4 to setup the Zebra printer.
 
 3. During the setup, you will be prompted to:
    - Select the label size for each printer: 57x32mm (barcode label) or 150x102mm (shipping label).
@@ -75,8 +76,9 @@ Note: The printer is configured to use the raw printer driver, which allows dire
 To remove all configured printers and start fresh:
 
 ```bash
-cd ~/barcode-pi && sudo ./remove_printers.sh
+cd ~ && sudo ./install_menu.sh
 ```
+Then select option 5 to remove printers.
 
 This will:
 - Remove all printers from CUPS
@@ -88,8 +90,9 @@ The application includes PrintNode for remote printing capabilities. To set up P
 
 1. Install PrintNode (if not already installed):
 ```bash
-cd ~/barcode-pi && sudo ./setup_printnode.sh
+cd ~ && sudo ./install_menu.sh
 ```
+Then select option 2 to setup PrintNode.
 
 2. Double-click the PrintNode icon on your desktop
 
@@ -101,8 +104,9 @@ cd ~/barcode-pi && sudo ./setup_printnode.sh
 
 6. Enable the PrintNode service:
 ```bash
-sudo ./setup_printnode_service.sh
+cd ~ && sudo ./install_menu.sh
 ```
+Then select option 3 to setup the PrintNode service.
 
 To start/stop/restart the PrintNode service:
 ```bash

@@ -47,28 +47,7 @@ echo "Setting up executable permissions..."
 chmod +x "$INSTALL_DIR"/*.sh 2>/dev/null
 chmod +x "$INSTALL_DIR"/barcode-pi/*.sh 2>/dev/null
 chmod +x "$INSTALL_DIR"/barcode-pi/*.py 2>/dev/null
-
-# Create symbolic links in home directory for easy access
-echo "Creating shortcuts in home directory..."
-scripts=(
-    "menu.sh"
-    "install_barcode_app.sh"
-    "setup_printnode.sh"
-    "setup_printnode_service.sh"
-    "setup_zebra_printer.sh"
-    "remove_printers.sh"
-    "uninstall_barcode_app.sh"
-)
-
-for script in "${scripts[@]}"; do
-    echo -n "  Creating shortcut for $script... "
-    if [ -f "$INSTALL_DIR/$script" ]; then
-        ln -sf "$INSTALL_DIR/$script" "/home/pi/$script"
-        echo -e "${GREEN}✓${NC}"
-    else
-        echo -e "${YELLOW}⚠ Script not found${NC}"
-    fi
-done
+echo -e "${GREEN}✓ All scripts are now executable${NC}"
 
 # Setup printer command alias in .bashrc if not already present
 echo

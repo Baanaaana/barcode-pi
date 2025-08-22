@@ -81,15 +81,7 @@ if [ -f "$HOME/.bashrc" ]; then
     sed -i '/alias printer=/d' "$HOME/.bashrc"
 fi
 
-# Remove symbolic links and scripts from home directory
-echo "Removing installation scripts and shortcuts..."
-rm -f "$HOME/menu.sh"
-rm -f "$HOME/install_menu.sh"
-rm -f "$HOME/install_barcode_app.sh"
-rm -f "$HOME/setup_printnode.sh"
-rm -f "$HOME/setup_printnode_service.sh"
-rm -f "$HOME/setup_zebra_printer.sh"
-rm -f "$HOME/remove_printers.sh"
+# Note: All scripts are in /home/pi/barcode-pi/ and will be removed with that directory
 
 # Remove this uninstall script (must be last)
 SCRIPT_PATH="$0"

@@ -97,17 +97,21 @@ class zebra(object):
         self.output(commands)
 EOL
 
-# Create application directory
-echo "Creating application directory..."
-rm -rf /home/pi/barcode-pi
-mkdir -p /home/pi/barcode-pi
-cd /home/pi/barcode-pi
-
-# Download the application files from your repository
-echo "Downloading application files..."
-git clone https://github.com/Baanaaana/barcode-pi.git ./temp
-cp -r ./temp/barcode-pi/* .
-rm -rf ./temp
+# Check if barcode-pi directory already exists from menu installation
+if [ ! -d "/home/pi/barcode-pi" ]; then
+    echo "Creating application directory..."
+    mkdir -p /home/pi/barcode-pi
+    cd /home/pi/barcode-pi
+    
+    # Download the application files from your repository
+    echo "Downloading application files..."
+    git clone https://github.com/Baanaaana/barcode-pi.git ./temp
+    cp -r ./temp/barcode-pi/* .
+    rm -rf ./temp
+else
+    echo "Using existing barcode-pi installation..."
+    cd /home/pi/barcode-pi
+fi
 
 # Display printer setup instructions
 echo "To set up your Zebra ZPL printer:"
@@ -178,15 +182,21 @@ sudo systemctl start barcode-printer.service
 echo "Setting permissions..."
 chmod +x /home/pi/.config/autostart/barcode_printer.desktop
 chmod +x /home/pi/Desktop/BarcodeApp.desktop
-chmod +x /home/pi/barcode-pi/run.sh
-chmod +x /home/pi/barcode-pi/run-sleep.sh
-chmod +x /home/pi/barcode-pi/YesBarcode.py
-chmod +x /home/pi/barcode-pi/set_url.py
-chmod +x /home/pi/setup_zebra_printer.sh
-chmod +x /home/pi/barcode-pi/verify_printer.py
-chmod +x /home/pi/remove_printers.sh
-chmod +x /home/pi/setup_printnode.sh
-chmod +x /home/pi/setup_printnode_service.sh
+
+# Set permissions for application files in barcode-pi/barcode-pi/
+if [ -d "/home/pi/barcode-pi/barcode-pi" ]; then
+    chmod +x /home/pi/barcode-pi/barcode-pi/run.sh 2>/dev/null
+    chmod +x /home/pi/barcode-pi/barcode-pi/run-sleep.sh 2>/dev/null
+    chmod +x /home/pi/barcode-pi/barcode-pi/YesBarcode.py 2>/dev/null
+    chmod +x /home/pi/barcode-pi/barcode-pi/set_url.py 2>/dev/null
+    chmod +x /home/pi/barcode-pi/barcode-pi/verify_printer.py 2>/dev/null
+fi
+
+# Set permissions for setup scripts in barcode-pi/
+chmod +x /home/pi/barcode-pi/setup_zebra_printer.sh 2>/dev/null
+chmod +x /home/pi/barcode-pi/remove_printers.sh 2>/dev/null
+chmod +x /home/pi/barcode-pi/setup_printnode.sh 2>/dev/null
+chmod +x /home/pi/barcode-pi/setup_printnode_service.sh 2>/dev/null
 
 # Set correct ownership
 chown -R pi:pi /home/pi/barcode-pi

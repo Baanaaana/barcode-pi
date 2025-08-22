@@ -7,106 +7,96 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-# Setup printer command alias in .bashrc if not already present
-if ! grep -q "alias printer=" ~/.bashrc 2>/dev/null; then
-    echo "" >> ~/.bashrc
-    echo "# Printer installation menu alias" >> ~/.bashrc
-    echo "alias printer='sudo ~/install_menu.sh'" >> ~/.bashrc
-    echo -e "${GREEN}✓ 'printer' command has been added to your shell${NC}"
-    echo -e "${YELLOW}Note: Run 'source ~/.bashrc' or open a new terminal to use the 'printer' command${NC}"
-    echo
+echo -e "${BLUE}========================================${NC}"
+echo -e "${BLUE}   Barcode-Pi Menu Installer           ${NC}"
+echo -e "${BLUE}========================================${NC}"
+echo
+
+# Check if git is installed
+if ! command -v git &> /dev/null; then
+    echo -e "${YELLOW}Git is not installed. Installing git...${NC}"
+    sudo apt-get update
+    sudo apt-get install -y git
 fi
 
-# Function to display the menu
-display_menu() {
-    clear
-    echo -e "${BLUE}========================================${NC}"
-    echo -e "${BLUE}     Barcode-Pi Installation Menu      ${NC}"
-    echo -e "${BLUE}========================================${NC}"
-    echo
-    echo -e "${GREEN}Please select an option:${NC}"
-    echo
-    echo "  1) Install Barcode Application"
-    echo "  2) Setup PrintNode"
-    echo "  3) Setup PrintNode Service"
-    echo "  4) Setup Zebra Printer"
-    echo "  5) Remove Printers"
-    echo "  6) Uninstall Everything"
-    echo "  7) Exit"
-    echo
-    echo -e "${YELLOW}----------------------------------------${NC}"
-    echo -n "Enter your choice [1-7]: "
-}
+# Repository URL and installation directory
+REPO_URL="https://github.com/Baanaaana/barcode-pi.git"
+INSTALL_DIR="/home/pi/barcode-pi"
 
-# Function to run a script with proper error handling
-run_script() {
-    local script_path="$1"
-    local script_name="$2"
+# Remove old installation if it exists
+if [ -d "$INSTALL_DIR" ]; then
+    echo -e "${YELLOW}Removing old installation...${NC}"
+    rm -rf "$INSTALL_DIR"
+fi
+
+# Clone the repository directly to /home/pi/barcode-pi
+echo -e "${GREEN}Cloning Barcode-Pi repository...${NC}"
+if git clone "$REPO_URL" "$INSTALL_DIR"; then
+    echo -e "${GREEN}✓ Repository cloned successfully to $INSTALL_DIR${NC}"
     
-    echo
-    echo -e "${BLUE}Running: ${script_name}${NC}"
-    echo -e "${YELLOW}----------------------------------------${NC}"
-    
-    if [ -f "$script_path" ]; then
-        # Make sure the script is executable
-        chmod +x "$script_path"
-        
-        # Run the script
-        if bash "$script_path"; then
-            echo
-            echo -e "${GREEN}✓ ${script_name} completed successfully${NC}"
-        else
-            echo
-            echo -e "${RED}✗ ${script_name} failed with error code $?${NC}"
-        fi
+    # Set correct ownership for pi user
+    chown -R pi:pi "$INSTALL_DIR"
+else
+    echo -e "${RED}✗ Failed to clone repository${NC}"
+    exit 1
+fi
+
+# Make all scripts executable
+echo
+echo "Setting up executable permissions..."
+chmod +x "$INSTALL_DIR"/*.sh 2>/dev/null
+chmod +x "$INSTALL_DIR"/barcode-pi/*.sh 2>/dev/null
+chmod +x "$INSTALL_DIR"/barcode-pi/*.py 2>/dev/null
+
+# Create symbolic links in home directory for easy access
+echo "Creating shortcuts in home directory..."
+scripts=(
+    "menu.sh"
+    "install_barcode_app.sh"
+    "setup_printnode.sh"
+    "setup_printnode_service.sh"
+    "setup_zebra_printer.sh"
+    "remove_printers.sh"
+    "uninstall_barcode_app.sh"
+)
+
+for script in "${scripts[@]}"; do
+    echo -n "  Creating shortcut for $script... "
+    if [ -f "$INSTALL_DIR/$script" ]; then
+        ln -sf "$INSTALL_DIR/$script" "/home/pi/$script"
+        echo -e "${GREEN}✓${NC}"
     else
-        echo -e "${RED}✗ Error: Script not found at ${script_path}${NC}"
+        echo -e "${YELLOW}⚠ Script not found${NC}"
     fi
-    
-    echo
-    echo -e "${YELLOW}Press Enter to continue...${NC}"
-    read -r
-}
-
-# Main menu loop
-while true; do
-    display_menu
-    read -r choice
-    
-    case $choice in
-        1)
-            run_script "install_barcode_app.sh" "Install Barcode Application"
-            ;;
-        2)
-            run_script "setup_printnode.sh" "Setup PrintNode"
-            ;;
-        3)
-            run_script "setup_printnode_service.sh" "Setup PrintNode Service"
-            ;;
-        4)
-            run_script "setup_zebra_printer.sh" "Setup Zebra Printer"
-            ;;
-        5)
-            run_script "remove_printers.sh" "Remove Printers"
-            ;;
-        6)
-            run_script "uninstall_barcode_app.sh" "Uninstall Everything"
-            # If uninstall was successful, exit the menu
-            if [ $? -eq 0 ]; then
-                exit 0
-            fi
-            ;;
-        7)
-            echo
-            echo -e "${GREEN}Exiting installation menu. Goodbye!${NC}"
-            echo
-            exit 0
-            ;;
-        *)
-            echo
-            echo -e "${RED}Invalid option. Please select a number between 1 and 7.${NC}"
-            echo -e "${YELLOW}Press Enter to continue...${NC}"
-            read -r
-            ;;
-    esac
 done
+
+# Setup printer command alias in .bashrc if not already present
+echo
+echo "Setting up 'printer' command..."
+if ! grep -q "alias printer=" /home/pi/.bashrc 2>/dev/null; then
+    echo "" >> /home/pi/.bashrc
+    echo "# Printer installation menu alias" >> /home/pi/.bashrc
+    echo "alias printer='sudo /home/pi/barcode-pi/menu.sh'" >> /home/pi/.bashrc
+    echo -e "${GREEN}✓ 'printer' command has been added to your shell${NC}"
+    echo -e "${YELLOW}Note: Run 'source ~/.bashrc' or open a new terminal to use the 'printer' command${NC}"
+else
+    echo -e "${GREEN}✓ 'printer' command already exists${NC}"
+fi
+
+echo
+echo -e "${GREEN}========================================${NC}"
+echo -e "${GREEN}    Installation Complete!              ${NC}"
+echo -e "${GREEN}========================================${NC}"
+echo
+echo "The Barcode-Pi repository has been cloned to: ${YELLOW}$INSTALL_DIR${NC}"
+echo
+echo "You can now:"
+echo "  1. Run the menu directly: ${YELLOW}sudo $INSTALL_DIR/menu.sh${NC}"
+echo "  2. Use the shortcut command: ${YELLOW}printer${NC} (after reloading your shell)"
+echo "  3. Use shortcuts from home: ${YELLOW}sudo ~/menu.sh${NC}"
+echo
+echo -e "${BLUE}Starting the menu now...${NC}"
+echo
+
+# Start the menu
+sudo "$INSTALL_DIR/menu.sh"

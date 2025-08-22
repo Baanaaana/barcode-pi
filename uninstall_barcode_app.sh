@@ -50,10 +50,10 @@ if command -v lpstat &> /dev/null; then
     done
 fi
 
-# Remove barcode-pi application directory
-if [ -d "$HOME/barcode-pi" ]; then
+# Remove barcode-pi application directory (which is now the cloned repo)
+if [ -d "/home/pi/barcode-pi" ]; then
     echo "Removing barcode-pi application directory..."
-    rm -rf "$HOME/barcode-pi"
+    rm -rf "/home/pi/barcode-pi"
 fi
 
 # Remove PrintNode installation
@@ -81,8 +81,9 @@ if [ -f "$HOME/.bashrc" ]; then
     sed -i '/alias printer=/d' "$HOME/.bashrc"
 fi
 
-# Remove installation scripts from home directory
-echo "Removing installation scripts..."
+# Remove symbolic links and scripts from home directory
+echo "Removing installation scripts and shortcuts..."
+rm -f "$HOME/menu.sh"
 rm -f "$HOME/install_menu.sh"
 rm -f "$HOME/install_barcode_app.sh"
 rm -f "$HOME/setup_printnode.sh"

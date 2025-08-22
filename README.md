@@ -60,7 +60,7 @@ The system includes support for Zebra ZPL label printers. To set up the printers
 
 2. Run the installation menu:
 ```bash
-cd ~ && sudo ./install_menu.sh
+cd ~ && sudo ./menu.sh
 ```
 Then select option 4 to setup the Zebra printer.
 
@@ -76,7 +76,7 @@ Note: The printer is configured to use the raw printer driver, which allows dire
 To remove all configured printers and start fresh:
 
 ```bash
-cd ~ && sudo ./install_menu.sh
+cd ~ && sudo ./menu.sh
 ```
 Then select option 5 to remove printers.
 
@@ -90,7 +90,7 @@ The application includes PrintNode for remote printing capabilities. To set up P
 
 1. Install PrintNode (if not already installed):
 ```bash
-cd ~ && sudo ./install_menu.sh
+cd ~ && sudo ./menu.sh
 ```
 Then select option 2 to setup PrintNode.
 
@@ -104,7 +104,7 @@ Then select option 2 to setup PrintNode.
 
 6. Enable the PrintNode service:
 ```bash
-cd ~ && sudo ./install_menu.sh
+cd ~ && sudo ./menu.sh
 ```
 Then select option 3 to setup the PrintNode service.
 

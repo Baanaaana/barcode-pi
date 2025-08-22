@@ -2,13 +2,13 @@
 
 echo "Removing all configured printers..."
 
-# Get list of all printers and remove them
-while IFS= read -r printer; do
-    if [ ! -z "$printer" ]; then
-        echo "Removing printer: $printer"
-        lpadmin -x "$printer"
-    fi
-done < <(lpstat -p | cut -d' ' -f2)
+# # Get list of all printers and remove them
+# while IFS= read -r printer; do
+#     if [ ! -z "$printer" ]; then
+#         echo "Removing printer: $printer"
+#         lpadmin -x "$printer"
+#     fi
+# done < <(lpstat -p | cut -d' ' -f2)
 
 # Check if running as root
 if [ "$EUID" -ne 0 ]; then 
@@ -47,24 +47,48 @@ configure_printer() {
     echo "Detecting USB printers..."
     PRINTERS=()
     while IFS= read -r line; do
-        if [[ $line == *"Zebra"* ]]; then
+        # Look for USB printers (they start with "direct usb:")
+        if [[ $line == *"usb:"* ]] || [[ $line == *"usb://"* ]]; then
             PRINTERS+=("$line")
         fi
     done < <(lpinfo -v)
 
     if [ ${#PRINTERS[@]} -eq 0 ]; then
-        echo "Error: No Zebra printers detected via USB"
-        echo "Available devices:"
-        lpinfo -v
-        exit 1
+        echo "Warning: No USB printers detected"
+        echo ""
+        echo "Please make sure:"
+        echo "1. Your Zebra printer is connected via USB"
+        echo "2. The printer is powered on"
+        echo ""
+        echo "Available devices detected:"
+        lpinfo -v | grep -E "direct|usb"
+        echo ""
+        echo "Would you like to see ALL available devices and select one manually? (y/n)"
+        read -p "Choice: " SHOW_ALL
+        
+        if [[ $SHOW_ALL == "y" || $SHOW_ALL == "Y" ]]; then
+            # Show all devices and let user select
+            PRINTERS=()
+            while IFS= read -r line; do
+                PRINTERS+=("$line")
+            done < <(lpinfo -v)
+            
+            if [ ${#PRINTERS[@]} -eq 0 ]; then
+                echo "Error: No printers detected at all"
+                exit 1
+            fi
+        else
+            echo "Please connect your USB printer and try again."
+            exit 1
+        fi
     fi
 
-    echo "Available Zebra printers:"
+    echo "Available printers:"
     for i in "${!PRINTERS[@]}"; do
         echo "$i) ${PRINTERS[$i]}"
     done
 
-    read -p "Select the printer to configure (0-${#PRINTERS[@]}): " PRINTER_INDEX
+    read -p "Select the printer to configure (0-$((${#PRINTERS[@]}-1))): " PRINTER_INDEX
     PRINTER_URI=$(echo "${PRINTERS[$PRINTER_INDEX]}" | awk '{print $2}')
 
     # Ask for label size

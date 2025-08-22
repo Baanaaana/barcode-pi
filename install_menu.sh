@@ -67,17 +67,17 @@ echo -e "${GREEN}========================================${NC}"
 echo -e "${GREEN}    Installation Complete!              ${NC}"
 echo -e "${GREEN}========================================${NC}"
 echo
-echo "The Barcode-Pi repository has been cloned to: ${YELLOW}$INSTALL_DIR${NC}"
+echo -e "The Barcode-Pi repository has been cloned to: ${YELLOW}$INSTALL_DIR${NC}"
 echo
 echo -e "${BLUE}To start using the menu, run ONE of these commands:${NC}"
 echo
-echo "  1. Quick start (reload shell and open menu):"
-echo "     ${YELLOW}source ~/.bashrc && printer${NC}"
+echo -e "  1. Quick start (reload shell and open menu):"
+echo -e "     ${YELLOW}source ~/.bashrc && printer${NC}"
 echo
-echo "  2. Just reload shell (to enable 'printer' command):"
-echo "     ${YELLOW}source ~/.bashrc${NC}"
+echo -e "  2. Just reload shell (to enable 'printer' command):"
+echo -e "     ${YELLOW}source ~/.bashrc${NC}"
 echo
-echo "  3. Open menu directly without reload:"
-echo "     ${YELLOW}sudo $INSTALL_DIR/menu.sh${NC}"
+echo -e "  3. Open menu directly without reload:"
+echo -e "     ${YELLOW}sudo $INSTALL_DIR/menu.sh${NC}"
 echo
 echo -e "${GREEN}After reloading, you can always open the menu by typing: ${YELLOW}printer${NC}"

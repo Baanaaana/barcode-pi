@@ -29,15 +29,48 @@ if [ -d "$INSTALL_DIR" ]; then
     rm -rf "$INSTALL_DIR"
 fi
 
-# Clone the repository directly to /home/pi/barcode-pi
+# Clone the repository to a temp directory first
 echo -e "${GREEN}Cloning Barcode-Pi repository...${NC}"
-if git clone "$REPO_URL" "$INSTALL_DIR"; then
-    echo -e "${GREEN}✓ Repository cloned successfully to $INSTALL_DIR${NC}"
+TEMP_DIR="/tmp/barcode-pi-temp"
+rm -rf "$TEMP_DIR"
+
+if git clone "$REPO_URL" "$TEMP_DIR"; then
+    echo -e "${GREEN}✓ Repository cloned successfully${NC}"
+    
+    # Create the installation directory
+    mkdir -p "$INSTALL_DIR"
+    
+    echo "Organizing files in $INSTALL_DIR..."
+    
+    # First, copy all root-level files (menu.sh, install scripts, README, etc.)
+    for file in "$TEMP_DIR"/*; do
+        if [ -f "$file" ]; then
+            cp "$file" "$INSTALL_DIR/"
+        fi
+    done
+    
+    # Then copy the contents of the barcode-pi subdirectory (application files)
+    if [ -d "$TEMP_DIR/barcode-pi" ]; then
+        echo "Copying application files..."
+        cp -r "$TEMP_DIR/barcode-pi"/* "$INSTALL_DIR/" 2>/dev/null || true
+    fi
+    
+    # Clean up temp directory
+    rm -rf "$TEMP_DIR"
+    
+    # Make sure there's no nested barcode-pi subdirectory
+    if [ -d "$INSTALL_DIR/barcode-pi" ]; then
+        echo "Removing nested subdirectory..."
+        rm -rf "$INSTALL_DIR/barcode-pi"
+    fi
     
     # Set correct ownership for pi user
     chown -R pi:pi "$INSTALL_DIR"
+    
+    echo -e "${GREEN}✓ All files organized in $INSTALL_DIR${NC}"
 else
     echo -e "${RED}✗ Failed to clone repository${NC}"
+    rm -rf "$TEMP_DIR"
     exit 1
 fi
 

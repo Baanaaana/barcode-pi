@@ -97,26 +97,56 @@ class zebra(object):
         self.output(commands)
 EOL
 
-# Check if barcode-pi directory already exists from menu installation
-if [ -d "/home/pi/barcode-pi/barcode-pi" ]; then
-    echo "Copying application files from repository structure..."
-    # Copy all files from the subdirectory to the main directory
-    cp -r /home/pi/barcode-pi/barcode-pi/* /home/pi/barcode-pi/ 2>/dev/null || true
+# Check if barcode-pi directory exists (should be created by menu installer)
+if [ -d "/home/pi/barcode-pi" ]; then
+    echo "Using existing barcode-pi installation..."
     cd /home/pi/barcode-pi
-elif [ ! -d "/home/pi/barcode-pi" ]; then
+    
+    # Verify essential files exist
+    if [ ! -f "/home/pi/barcode-pi/YesBarcode.py" ]; then
+        echo "Warning: Application files not found. Downloading..."
+        git clone https://github.com/Baanaaana/barcode-pi.git ./temp
+        
+        # Copy application files
+        if [ -d "./temp/barcode-pi" ]; then
+            cp -r ./temp/barcode-pi/* . 2>/dev/null || true
+        fi
+        
+        # Copy root files too
+        for file in ./temp/*; do
+            if [ -f "$file" ]; then
+                cp "$file" . 2>/dev/null || true
+            fi
+        done
+        
+        rm -rf ./temp
+    fi
+else
     echo "Creating application directory..."
     mkdir -p /home/pi/barcode-pi
     cd /home/pi/barcode-pi
     
-    # Download the application files from your repository
+    # Download the application files
     echo "Downloading application files..."
     git clone https://github.com/Baanaaana/barcode-pi.git ./temp
-    cp -r ./temp/barcode-pi/* .
+    
+    # Copy application files from subdirectory
+    if [ -d "./temp/barcode-pi" ]; then
+        cp -r ./temp/barcode-pi/* .
+    fi
+    
+    # Copy root-level files
+    for file in ./temp/*; do
+        if [ -f "$file" ]; then
+            cp "$file" . 2>/dev/null || true
+        fi
+    done
+    
     rm -rf ./temp
-else
-    echo "Using existing barcode-pi installation..."
-    cd /home/pi/barcode-pi
 fi
+
+# Ensure we're in the right directory
+cd /home/pi/barcode-pi
 
 # Display printer setup instructions
 echo "To set up your Zebra ZPL printer:"

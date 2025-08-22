@@ -98,7 +98,12 @@ class zebra(object):
 EOL
 
 # Check if barcode-pi directory already exists from menu installation
-if [ ! -d "/home/pi/barcode-pi" ]; then
+if [ -d "/home/pi/barcode-pi/barcode-pi" ]; then
+    echo "Copying application files from repository structure..."
+    # Copy all files from the subdirectory to the main directory
+    cp -r /home/pi/barcode-pi/barcode-pi/* /home/pi/barcode-pi/ 2>/dev/null || true
+    cd /home/pi/barcode-pi
+elif [ ! -d "/home/pi/barcode-pi" ]; then
     echo "Creating application directory..."
     mkdir -p /home/pi/barcode-pi
     cd /home/pi/barcode-pi
@@ -183,14 +188,12 @@ echo "Setting permissions..."
 chmod +x /home/pi/.config/autostart/barcode_printer.desktop
 chmod +x /home/pi/Desktop/BarcodeApp.desktop
 
-# Set permissions for application files in barcode-pi/barcode-pi/
-if [ -d "/home/pi/barcode-pi/barcode-pi" ]; then
-    chmod +x /home/pi/barcode-pi/barcode-pi/run.sh 2>/dev/null
-    chmod +x /home/pi/barcode-pi/barcode-pi/run-sleep.sh 2>/dev/null
-    chmod +x /home/pi/barcode-pi/barcode-pi/YesBarcode.py 2>/dev/null
-    chmod +x /home/pi/barcode-pi/barcode-pi/set_url.py 2>/dev/null
-    chmod +x /home/pi/barcode-pi/barcode-pi/verify_printer.py 2>/dev/null
-fi
+# Set permissions for application files in barcode-pi/
+chmod +x /home/pi/barcode-pi/run.sh 2>/dev/null
+chmod +x /home/pi/barcode-pi/run-sleep.sh 2>/dev/null
+chmod +x /home/pi/barcode-pi/YesBarcode.py 2>/dev/null
+chmod +x /home/pi/barcode-pi/set_url.py 2>/dev/null
+chmod +x /home/pi/barcode-pi/verify_printer.py 2>/dev/null
 
 # Set permissions for setup scripts in barcode-pi/
 chmod +x /home/pi/barcode-pi/setup_zebra_printer.sh 2>/dev/null

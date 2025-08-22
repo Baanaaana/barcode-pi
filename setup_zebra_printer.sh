@@ -140,9 +140,9 @@ EOF
 
     if [ "$CONFIG_CHOICE" -eq 1 ]; then
         if [ "$LABEL_CHOICE" -eq 1 ]; then
-            PPD_FILE="/home/pi/barcode-pi/barcode-pi/zebra-barcode.ppd"
+            PPD_FILE="/home/pi/barcode-pi/zebra-barcode.ppd"
         elif [ "$LABEL_CHOICE" -eq 2 ]; then
-            PPD_FILE="/home/pi/barcode-pi/barcode-pi/zebra-shipping.ppd"
+            PPD_FILE="/home/pi/barcode-pi/zebra-shipping.ppd"
         fi
         # Add Zebra printer with PPD file
         echo "Adding $PRINTER_NAME printer with PPD file..."

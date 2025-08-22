@@ -37,16 +37,17 @@ sudo apt-get install -y \
 
 # Create virtual environment
 echo "Creating Python virtual environment..."
-python3 -m venv ~/barcode_env --system-site-packages
+python3 -m venv /home/pi/barcode_env --system-site-packages
 
 # Activate virtual environment and install additional packages
 echo "Installing additional Python packages..."
-source ~/barcode_env/bin/activate
+source /home/pi/barcode_env/bin/activate
 pip install python-barcode
 
 # Create zebra module
 echo "Creating zebra module..."
-cat > ~/barcode_env/lib/python3.11/site-packages/zebra.py << EOL
+mkdir -p /home/pi/barcode_env/lib/python3.11/site-packages/
+cat > /home/pi/barcode_env/lib/python3.11/site-packages/zebra.py << EOL
 import subprocess
 import sys
 
@@ -98,9 +99,9 @@ EOL
 
 # Create application directory
 echo "Creating application directory..."
-rm -rf ~/barcode-pi
-mkdir -p ~/barcode-pi
-cd ~/barcode-pi
+rm -rf /home/pi/barcode-pi
+mkdir -p /home/pi/barcode-pi
+cd /home/pi/barcode-pi
 
 # Download the application files from your repository
 echo "Downloading application files..."
@@ -117,7 +118,7 @@ echo "A test barcode will be printed automatically during setup."
 
 # Create printer configuration
 echo "Creating printer configuration..."
-cat > ~/barcode-pi/config.ini << EOF
+cat > /home/pi/barcode-pi/config.ini << EOF
 [Printer]
 printer_name=ZebraZPL
 auto_print=true
@@ -125,10 +126,11 @@ copies=1
 EOF
 
 # Create required directories and files
-mkdir -p ~/.config/autostart
+mkdir -p /home/pi/.config/autostart
+mkdir -p /home/pi/Desktop
 
 # Create desktop shortcut
-cat > ~/Desktop/BarcodeApp.desktop << EOF
+cat > /home/pi/Desktop/BarcodeApp.desktop << EOF
 [Desktop Entry]
 Type=Application
 Name=Barcode App
@@ -138,11 +140,12 @@ Terminal=false
 Categories=Utility;
 EOF
 
-chmod +x ~/Desktop/BarcodeApp.desktop
+chmod +x /home/pi/Desktop/BarcodeApp.desktop
+chown pi:pi /home/pi/Desktop/BarcodeApp.desktop
 
 # Create autostart entry
-mkdir -p ~/.config/autostart
-cat > ~/.config/autostart/barcode_printer.desktop << EOF
+mkdir -p /home/pi/.config/autostart
+cat > /home/pi/.config/autostart/barcode_printer.desktop << EOF
 [Desktop Entry]
 Type=Application
 Name=Barcode Printer
@@ -173,17 +176,22 @@ sudo systemctl start barcode-printer.service
 
 # Set permissions
 echo "Setting permissions..."
-chmod +x ~/.config/autostart/barcode_printer.desktop
-chmod +x ~/Desktop/BarcodeApp.desktop
-chmod +x ~/barcode-pi/run.sh
-chmod +x ~/barcode-pi/run-sleep.sh
-chmod +x ~/barcode-pi/YesBarcode.py
-chmod +x ~/barcode-pi/set_url.py
-chmod +x ~/setup_zebra_printer.sh
-chmod +x ~/barcode-pi/verify_printer.py
-chmod +x ~/remove_printers.sh
-chmod +x ~/setup_printnode.sh
-chmod +x ~/setup_printnode_service.sh
+chmod +x /home/pi/.config/autostart/barcode_printer.desktop
+chmod +x /home/pi/Desktop/BarcodeApp.desktop
+chmod +x /home/pi/barcode-pi/run.sh
+chmod +x /home/pi/barcode-pi/run-sleep.sh
+chmod +x /home/pi/barcode-pi/YesBarcode.py
+chmod +x /home/pi/barcode-pi/set_url.py
+chmod +x /home/pi/setup_zebra_printer.sh
+chmod +x /home/pi/barcode-pi/verify_printer.py
+chmod +x /home/pi/remove_printers.sh
+chmod +x /home/pi/setup_printnode.sh
+chmod +x /home/pi/setup_printnode_service.sh
+
+# Set correct ownership
+chown -R pi:pi /home/pi/barcode-pi
+chown -R pi:pi /home/pi/barcode_env
+chown pi:pi /home/pi/.config/autostart/barcode_printer.desktop
 
 echo "Installation complete!"
 echo "The application will start automatically on next boot"

@@ -1,5 +1,32 @@
 #!/bin/bash
 
+# Function to configure PrintNode credentials
+configure_printnode_credentials() {
+    echo "Configuring PrintNode credentials..."
+    echo "Please enter your PrintNode credentials:"
+    read -p "Email: " PRINTNODE_EMAIL
+    read -s -p "Password: " PRINTNODE_PASSWORD
+    echo ""
+    
+    # Attempt to authenticate using the PrintNode binary
+    echo "Attempting to authenticate with PrintNode..."
+    
+    # Get the system hostname
+    HOSTNAME=$(hostname)
+    
+    # Create a temporary config file for PrintNode
+    su - pi -c "cd /home/pi/printnode && echo -e '${PRINTNODE_EMAIL}\n${PRINTNODE_PASSWORD}' | ./PrintNode --email '${PRINTNODE_EMAIL}' --password '${PRINTNODE_PASSWORD}' --computer-name '${HOSTNAME}' --headless 2>/dev/null &"
+    
+    # Give it a moment to authenticate
+    sleep 3
+    
+    # Kill the process as we just needed to authenticate
+    pkill -f PrintNode
+    
+    echo "PrintNode authentication configured."
+    echo ""
+}
+
 # Function to configure label printer settings
 configure_label_printer() {
     echo "Configuring label printer settings..."
@@ -109,13 +136,62 @@ EOF
     echo ""
 }
 
-echo "Setting up PrintNode..."
+echo "PrintNode Setup and Configuration"
+echo "=================================="
 
 # Check if running as root
 if [ "$EUID" -ne 0 ]; then 
     echo "Please run as root (use sudo)"
     exit 1
 fi
+
+# Check if PrintNode is already installed
+if [ -d "/home/pi/printnode" ] && [ -f "/home/pi/printnode/PrintNode" ]; then
+    echo "PrintNode is already installed."
+    echo ""
+    echo "What would you like to do?"
+    echo "1) Reconfigure PrintNode credentials"
+    echo "2) Configure label printer settings"
+    echo "3) Both (credentials and printer settings)"
+    echo "4) Reinstall PrintNode completely"
+    echo "5) Exit"
+    echo ""
+    read -p "Enter your choice (1-5): " MENU_CHOICE
+    
+    case $MENU_CHOICE in
+        1)
+            configure_printnode_credentials
+            ;;
+        2)
+            configure_label_printer
+            ;;
+        3)
+            configure_printnode_credentials
+            configure_label_printer
+            ;;
+        4)
+            echo "Reinstalling PrintNode..."
+            rm -rf /home/pi/printnode
+            # Continue with normal installation
+            ;;
+        5)
+            echo "Exiting..."
+            exit 0
+            ;;
+        *)
+            echo "Invalid choice. Exiting..."
+            exit 1
+            ;;
+    esac
+    
+    # If we selected options 1-3, we're done
+    if [ "$MENU_CHOICE" != "4" ]; then
+        echo "Configuration complete!"
+        exit 0
+    fi
+fi
+
+echo "Setting up PrintNode..."
 
 # Download PrintNode client
 PRINTNODE_URL="https://dl.printnode.com/client/printnode/4.28.14/PrintNode-4.28.14-pi-bookworm-aarch64.tar.gz" # Published: 2025-04-23
@@ -163,28 +239,7 @@ read -p "Would you like to configure PrintNode credentials now? (y/n): " -n 1 -r
 echo ""
 
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-    echo "Please enter your PrintNode credentials:"
-    read -p "Email: " PRINTNODE_EMAIL
-    read -s -p "Password: " PRINTNODE_PASSWORD
-    echo ""
-    
-    # Attempt to authenticate using the PrintNode binary
-    echo "Attempting to authenticate with PrintNode..."
-    
-    # Get the system hostname
-    HOSTNAME=$(hostname)
-    
-    # Create a temporary config file for PrintNode
-    su - pi -c "cd /home/pi/printnode && echo -e '${PRINTNODE_EMAIL}\n${PRINTNODE_PASSWORD}' | ./PrintNode --email '${PRINTNODE_EMAIL}' --password '${PRINTNODE_PASSWORD}' --computer-name '${HOSTNAME}' --headless 2>/dev/null &"
-    
-    # Give it a moment to authenticate
-    sleep 3
-    
-    # Kill the process as we just needed to authenticate
-    pkill -f PrintNode
-    
-    echo "PrintNode authentication configured."
-    echo ""
+    configure_printnode_credentials
     
     # Offer to configure label printer settings
     echo ""
